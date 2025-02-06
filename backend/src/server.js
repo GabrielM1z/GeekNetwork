@@ -1,8 +1,10 @@
 const express = require("express");
 const cors = require("cors");
 const path = require("path");
-const { getUsersSQL, getUsersNeo4j } = require("./controllers/userController");
 require("dotenv").config();
+
+// Importation des routes
+const userRoutes = require("./routes/userRoutes");
 
 const app = express();
 app.use(cors());
@@ -11,18 +13,8 @@ app.use(express.json());
 // Serve les fichiers statiques (front-end) depuis le dossier 'public'
 app.use(express.static(path.join(__dirname, "public")));
 
-// Route pour obtenir les utilisateurs
-app.get("/api/users", (req, res) => {
-  const dbType = req.query.db; // 'sql' ou 'nosql'
-
-    if (dbType === "sql") {
-        getUsersSQL(res);
-    } else if (dbType === "nosql") {
-        getUsersNeo4j(res);
-    } else {
-        res.status(400).send("Base de données non spécifiée");
-    }
-});
+// Utilisation des routes pour les utilisateurs
+app.use("/api", userRoutes);
 
 // Lancement du serveur
 const PORT = process.env.PORT || 5000;
