@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analyse de comportement d'achat</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="app">
+        <h1>Choisir la base de données</h1>
+
+        <!-- Choix de la base de données -->
+        <div>
+        <input type="radio" id="sql" name="db" value="sql" checked>
+        <label for="sql">PostgreSQL</label>
+        
+        <input type="radio" id="nosql" name="db" value="nosql">
+        <label for="nosql">Neo4j</label>
+        </div>
+
+        <div id="test">
+        <button onclick="fetchData()">Requêter /api/users</button>
+        <p id="time">Temps de réponse : </p>
+        <div id="response"></div>
+        </div>
+    </div>
+    
+    <script src="app.js"></script>
+</body>
+</html>
