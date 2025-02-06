@@ -30,4 +30,74 @@ const runSetupSQL = (req, res) => {
     });
 };
 
-module.exports = { runSetupSQL };
+
+
+// Route d'insertion massive
+const insertMassiveData = async (req, res) => {
+    try {
+        // Commencer une transaction
+        await pool.query("BEGIN");
+
+        // 1. Insérer 1 million d'utilisateurs
+        for (let i = 0; i < 1000000; i++) {
+            const firstName = faker.name.firstName();
+            const lastName = faker.name.lastName();
+            await pool.query(
+                'INSERT INTO "User" (firstname, lastname) VALUES ($1, $2)',
+                [firstName, lastName]
+            );
+        }
+
+        // 2. Insérer des relations de followers (0-20 followers par utilisateur)
+        for (let userId = 1; userId <= 1000000; userId++) {
+            const numberOfFollowers = Math.floor(Math.random() * 21); // 0-20 followers
+            for (let j = 0; j < numberOfFollowers; j++) {
+                const followerId = Math.floor(Math.random() * 1000000) + 1;
+                if (followerId !== userId) {
+                    await pool.query(
+                        'INSERT INTO "Follow" (id_user, id_follower) VALUES ($1, $2)',
+                        [userId, followerId]
+                    );
+                }
+            }
+        }
+
+        // 3. Insérer 10 000 produits
+        for (let i = 0; i < 10000; i++) {
+            const productName = faker.commerce.productName();
+            const productPrice = parseFloat(faker.commerce.price());
+            await pool.query(
+                'INSERT INTO "Product" (name, price) VALUES ($1, $2)',
+                [productName, productPrice]
+            );
+        }
+
+        // 4. Insérer des relations de possession de produits (0-5 produits par utilisateur)
+        for (let userId = 1; userId <= 1000000; userId++) {
+            const numberOfProducts = Math.floor(Math.random() * 6); // 0-5 produits
+            for (let j = 0; j < numberOfProducts; j++) {
+                const productId = Math.floor(Math.random() * 10000) + 1; // 10 000 produits
+                await pool.query(
+                    'INSERT INTO "Own" (id_user, id_product) VALUES ($1, $2)',
+                    [userId, productId]
+                );
+            }
+        }
+
+        // Commit la transaction
+        await pool.query("COMMIT");
+
+        // Réponse réussie
+        res.json({ message: "Données insérées avec succès dans PostgreSQL" });
+    } catch (error) {
+        // Rollback si erreur
+        await pool.query("ROLLBACK");
+        console.error("Erreur lors de l'insertion des données :", error);
+        res.status(500).json({ error: "Erreur lors de l'insertion des données" });
+    }
+};
+
+
+
+
+module.exports = { runSetupSQL, insertMassiveData };
