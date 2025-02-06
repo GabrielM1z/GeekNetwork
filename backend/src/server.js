@@ -1,16 +1,19 @@
 const express = require("express");
 const cors = require("cors");
-const { getUsersSQL } = require("./controllers/userController");
-const { getUsersNeo4j } = require("./controllers/userController");
+const path = require("path");
+const { getUsersSQL, getUsersNeo4j } = require("./controllers/userController");
 require("dotenv").config();
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
+// Serve les fichiers statiques (front-end) depuis le dossier 'public'
+app.use(express.static(path.join(__dirname, "public")));
+
 // Route pour obtenir les utilisateurs
 app.get("/api/users", (req, res) => {
-    const dbType = req.query.db; // 'sql' ou 'nosql'
+  const dbType = req.query.db; // 'sql' ou 'nosql'
 
     if (dbType === "sql") {
         getUsersSQL(res);
