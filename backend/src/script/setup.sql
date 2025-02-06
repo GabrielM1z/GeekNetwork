@@ -1,3 +1,9 @@
+DROP TABLE IF EXISTS "Follow";
+DROP TABLE IF EXISTS "Own";
+DROP TABLE IF EXISTS "Product";
+DROP TABLE IF EXISTS "User";
+
+
 CREATE TABLE "User" (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     firstname VARCHAR(255) NOT NULL,
