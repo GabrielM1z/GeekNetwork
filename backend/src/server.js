@@ -6,6 +6,7 @@ require("dotenv").config();
 // Importation des routes
 const userRoutes = require("./routes/userRoutes");
 const initRoutes = require("./routes/initRoutes");
+const purchaseRoutes = require("./routes/purchaseRoutes");
 
 const app = express();
 app.use(cors());
@@ -17,6 +18,7 @@ app.use(express.static(path.join(__dirname, "public")));
 // Utilisation des routes pour les utilisateurs
 app.use("/api", userRoutes);
 app.use("/api", initRoutes);
+app.use("/api", purchaseRoutes);
 
 // Lancement du serveur
 const PORT = process.env.PORT || 5000;

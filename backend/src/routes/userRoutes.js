@@ -11,7 +11,7 @@ router.get("/users", (req, res) => {
     if (dbType === "sql") {
         getUsersSQL(res); // Utilise le contrôleur pour PostgreSQL
     } else if (dbType === "nosql") {
-        getUsersNeo4j(res); // Utilise le contrôleur pour Neo4j
+        getUsersNeo4j(res);
     } else {
         res.status(400).send("Base de données non spécifiée");
     }
