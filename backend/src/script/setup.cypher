@@ -1,0 +1,57 @@
+// Suppression de toutes les données existantes
+MATCH (n) DETACH DELETE n;
+
+//////////////////////////////////////////
+// Création des utilisateurs
+//////////////////////////////////////////
+CREATE (:User {id: "1", firstname: "Alice", lastname: "Martin"});
+CREATE (:User {id: "2", firstname: "Bob", lastname: "Dupont"});
+CREATE (:User {id: "3", firstname: "Charlie", lastname: "Lemoine"});
+CREATE (:User {id: "4", firstname: "David", lastname: "Cohen"});
+CREATE (:User {id: "5", firstname: "Emma", lastname: "Bernard"});
+CREATE (:User {id: "6", firstname: "Fanny", lastname: "Morel"});
+CREATE (:User {id: "7", firstname: "Georges", lastname: "Dubois"});
+CREATE (:User {id: "8", firstname: "Hugo", lastname: "Lefevre"});
+CREATE (:User {id: "9", firstname: "Isabelle", lastname: "Garcia"});
+CREATE (:User {id: "10", firstname: "Jules", lastname: "Roux"});
+
+//////////////////////////////////////////
+// Création des produits
+//////////////////////////////////////////
+CREATE (:Product {id: "101", name: "Ordinateur Portable", price: 999.99});
+CREATE (:Product {id: "102", name: "Smartphone", price: 799.99});
+CREATE (:Product {id: "103", name: "Casque Bluetooth", price: 199.99});
+CREATE (:Product {id: "104", name: "Souris Gaming", price: 49.99});
+CREATE (:Product {id: "105", name: "Clavier Mécanique", price: 89.99});
+CREATE (:Product {id: "106", name: "Écran 4K", price: 399.99});
+CREATE (:Product {id: "107", name: "Chaise Ergonomique", price: 299.99});
+CREATE (:Product {id: "108", name: "Tablette Graphique", price: 249.99});
+CREATE (:Product {id: "109", name: "Disque Dur Externe", price: 129.99});
+CREATE (:Product {id: "110", name: "Enceinte Connectée", price: 149.99});
+
+//////////////////////////////////////////
+// Création des relations OWN (possession de produits)
+//////////////////////////////////////////
+MATCH (u1:User {id: "1"}), (p1:Product {id: "101"}) CREATE (u1)-[:OWN]->(p1);
+MATCH (u2:User {id: "2"}), (p2:Product {id: "102"}) CREATE (u2)-[:OWN]->(p2);
+MATCH (u3:User {id: "3"}), (p3:Product {id: "103"}) CREATE (u3)-[:OWN]->(p3);
+MATCH (u4:User {id: "4"}), (p4:Product {id: "104"}) CREATE (u4)-[:OWN]->(p4);
+MATCH (u5:User {id: "5"}), (p5:Product {id: "105"}) CREATE (u5)-[:OWN]->(p5);
+MATCH (u6:User {id: "6"}), (p6:Product {id: "106"}) CREATE (u6)-[:OWN]->(p6);
+MATCH (u7:User {id: "7"}), (p7:Product {id: "107"}) CREATE (u7)-[:OWN]->(p7);
+MATCH (u8:User {id: "8"}), (p8:Product {id: "108"}) CREATE (u8)-[:OWN]->(p8);
+MATCH (u9:User {id: "9"}), (p9:Product {id: "109"}) CREATE (u9)-[:OWN]->(p9);
+MATCH (u10:User {id: "10"}), (p10:Product {id: "110"}) CREATE (u10)-[:OWN]->(p10);
+
+//////////////////////////////////////////
+// Création des relations FOLLOW (utilisateurs qui suivent d'autres utilisateurs)
+//////////////////////////////////////////
+MATCH (u1:User {id: "1"}), (u2:User {id: "2"}) CREATE (u1)-[:FOLLOWS]->(u2);
+MATCH (u3:User {id: "3"}), (u4:User {id: "4"}) CREATE (u3)-[:FOLLOWS]->(u4);
+MATCH (u5:User {id: "5"}), (u6:User {id: "6"}) CREATE (u5)-[:FOLLOWS]->(u6);
+MATCH (u7:User {id: "7"}), (u8:User {id: "8"}) CREATE (u7)-[:FOLLOWS]->(u8);
+MATCH (u9:User {id: "9"}), (u10:User {id: "10"}) CREATE (u9)-[:FOLLOWS]->(u10);
+MATCH (u2:User {id: "2"}), (u3:User {id: "3"}) CREATE (u2)-[:FOLLOWS]->(u3);
+MATCH (u4:User {id: "4"}), (u5:User {id: "5"}) CREATE (u4)-[:FOLLOWS]->(u5);
+MATCH (u6:User {id: "6"}), (u7:User {id: "7"}) CREATE (u6)-[:FOLLOWS]->(u7);
+MATCH (u8:User {id: "8"}), (u9:User {id: "9"}) CREATE (u8)-[:FOLLOWS]->(u9);
