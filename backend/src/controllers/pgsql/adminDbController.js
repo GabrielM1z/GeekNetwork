@@ -37,37 +37,7 @@ const runSetupSQL = (req, res) => {
 // Insérer des données massives //
 //////////////////////////////////
 
-// Fonction pour insérer des données massives
-const insertMassiveData = async (req, res) => {
-    try {
-        const { nbUser, nbProduct } = req.body;
-        console.log("Début de l'insertion des données...");
-
-        await pool.query("BEGIN");
-        await insertUser(nbUser);
-        await insertProduct(nbProduct);
-        await pool.query("COMMIT");
-
-        await pool.query("BEGIN");
-        await insertFollower();
-        await pool.query("COMMIT");
-
-        await pool.query("BEGIN");
-        await insertOwn();
-        await pool.query("COMMIT");
-
-        console.log("Insertion des données terminée !");
-        return res.json({ message: "Données insérées avec succès dans PostgreSQL" });
-
-    } catch (error) {
-        // Rollback si erreur
-        await pool.query("ROLLBACK");
-        console.error("Erreur lors de l'insertion des données :", error);
-        return res.status(500).json({ error: "Erreur lors de l'insertion des données" });
-    }
-};
-
-const insertMassiveUser = async (req, res) => {
+const insertMassiveUserSQL = async (req, res) => {
     try {
         const { nbUser } = req.body;
         console.log("Début de l'insertion des utilisateurs...");
@@ -87,7 +57,7 @@ const insertMassiveUser = async (req, res) => {
     }
 };
 
-const insertMassiveProduct = async (req, res) => {
+const insertMassiveProductSQL = async (req, res) => {
     try {
         const { nbProduct } = req.body;
         console.log("Début de l'insertion des produits...");
@@ -107,7 +77,7 @@ const insertMassiveProduct = async (req, res) => {
     }
 };
 
-const insertMassiveFollower = async (req, res) => {
+const insertMassiveFollowerSQL = async (req, res) => {
     try {
         console.log("Début de l'insertion des followers...");
 
@@ -126,7 +96,7 @@ const insertMassiveFollower = async (req, res) => {
     }
 };
 
-const insertMassiveOwn = async (req, res) => {
+const insertMassiveOwnSQL = async (req, res) => {
     try {
         console.log("Début de l'insertion des achats...");
 
@@ -298,4 +268,4 @@ const insertOwn = async () => {
 
 
 
-module.exports = { runSetupSQL, insertMassiveData, insertMassiveUser, insertMassiveProduct, insertMassiveFollower, insertMassiveOwn };
+module.exports = { runSetupSQL, insertMassiveUserSQL, insertMassiveProductSQL, insertMassiveFollowerSQL, insertMassiveOwnSQL };

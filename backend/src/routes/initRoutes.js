@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const { runSetupNoSQL } = require("../controllers/neo4j/adminDbController");
-const { runSetupSQL, insertMassiveData } = require("../controllers/pgsql/adminDbController");
+const { runSetupNoSQL, insertMassiveUserNoSQL, insertMassiveProductNoSQL, insertMassiveFollowerNoSQL, insertMassiveOwnNoSQL } = require("../controllers/neo4j/adminDbController");
+const { runSetupSQL, insertMassiveUserSQL, insertMassiveProductSQL, insertMassiveFollowerSQL, insertMassiveOwnSQL } = require("../controllers/pgsql/adminDbController");
 
 router.get("/init-pgsql", (req, res) => {
     runSetupSQL(req, res);
@@ -13,48 +13,53 @@ router.get("/init-neo4j", (req, res) => {
 
 // insérer des données massives
 router.post("/insert-massive-pgsql", (req, res) => {
-    insertMassiveData(req, res);
+    insertMassiveUserSQL(req, res);
+    insertMassiveProductSQL(req, res);
+    insertMassiveFollowerSQL(req, res);
+    insertMassiveOwnSQL(req, res);
 });
 
 router.post("/insert-massive-neo4j", (req, res) => {
-    console.log('Route insert-massive-neo4j exécutée...');
-
+    insertMassiveUserNoSQL(req, res);
+    insertMassiveProductNoSQL(req, res);
+    insertMassiveFollowerNoSQL(req, res);
+    insertMassiveOwnNoSQL(req, res);
 });
 
 // insérer des utilisateurs
 router.post("/insert-user-pgsql", (req, res) => {
-    insertUser(req, res);
+    insertMassiveUserSQL(req, res);
 });
 
 router.post("/insert-user-neo4j", (req, res) => {
-    console.log('Route insert-user-neo4j exécutée...');
+    insertMassiveUserNoSQL(req, res);
 });
 
 // inserer des produits
 router.post("/insert-product-pgsql", (req, res) => {
-    insertProduct(req, res);
+    insertMassiveProductSQL(req, res);
 });
 
 router.post("/insert-product-neo4j", (req, res) => {
-    console.log('Route insert-product-neo4j exécutée...');
+    insertMassiveProductNoSQL(req, res);
 });
 
 // insérer des followers
 router.post("/insert-follower-pgsql", (req, res) => {
-    insertFollower(req, res);
+    insertMassiveFollowerSQL(req, res);
 });
 
 router.post("/insert-follower-neo4j", (req, res) => {
-    console.log('Route insert-follower-neo4j exécutée...');
+    insertMassiveFollowerNoSQL(req, res);
 });
 
 // insérer des propriétaires
 router.post("/insert-own-pgsql", (req, res) => {
-    insertOwn(req, res);
+    insertMassiveOwnSQL(req, res);
 });
 
 router.post("/insert-own-neo4j", (req, res) => {
-    console.log('Route insert-own-neo4j exécutée...');
+    insertMassiveOwnNoSQL(req, res);
 });
 
 module.exports = router;
