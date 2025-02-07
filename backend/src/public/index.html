@@ -6,38 +6,82 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Analyse de comportement d'achat</title>
     <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <body>
     <div id="app">
         <h1>Choisir la base de données</h1>
-        <!-- Boutons pour initialiser les bases de données -->
-        <div>
+        <!-- Section pour initialiser les bases de données -->
+        <div class="action-buttons">
             <button onclick="initSql()">Initialiser PostgreSQL</button>
             <button onclick="initNoSql()">Initialiser Neo4j</button>
+            <div id="initResponse" style="color: red; font-weight: bold;"></div>
         </div>
 
-        <!-- Choix de la base de données -->
-        <div>
-            <input type="radio" id="sql" name="db" value="sql" checked>
-            <label for="sql">PostgreSQL</label>
-
-            <input type="radio" id="nosql" name="db" value="nosql">
-            <label for="nosql">Neo4j</label>
+        <!-- Sélection de la base de données -->
+        <div class="db-selection">
+            <label for="db">Choisir une base de données :</label>
+            <select id="db" name="db">
+                <option value="sql" selected>PostgreSQL</option>
+                <option value="nosql">Neo4j</option>
+            </select>
         </div>
 
-        <!-- Section de requêtes API -->
+        <!-- Section des requêtes API -->
         <div id="test">
-            <button onclick="user()">Requêter /api/users</button>
-            <button onclick="purchases()">Requêter /api/purchases/:id</button>
-            <button onclick="followersProducts()">Requêter /api/followers/:id/:depth</button>
-            <button onclick="productImpact()">Requêter /api/products/:id/impact</button>
-            <button onclick="trendingProducts()">Requêter /api/products/trending</button>
+            <!-- Section pour la requête N°1 (followers) -->
+            <div id="followers-section">
+                <button onclick="toggleFollowersFields()">Requête N°1 (followers)</button>
+                <div id="followers-fields" class="form-fields" style="display:none;">
+                    <label for="userId">ID de l'utilisateur :</label>
+                    <input type="text" id="userId" placeholder="Entrez l'ID"><br>
+                    <label for="depth">Profondeur des followers :</label>
+                    <input type="number" id="depth" placeholder="Entrez la profondeur"><br>
+                    <button class="research-btn" onclick="followers()">Rechercher</button>
+                </div>
+            </div>
+
+            <!-- Section pour la requête N°2 (followersProducts) -->
+            <div id="followersProducts-section">
+                <button onclick="toggleFollowersProductsFields()">Requête N°2 (followersProducts)</button>
+                <div id="followersProducts-fields" class="form-fields" style="display:none;">
+                    <label for="userId-products">ID de l'utilisateur :</label>
+                    <input type="text" id="userId-products" placeholder="Entrez l'ID"><br>
+                    <label for="depth-products">Profondeur des followers :</label>
+                    <input type="number" id="depth-products" placeholder="Entrez la profondeur"><br>
+                    <label for="productId">ID du produit :</label>
+                    <input type="text" id="productId" placeholder="Entrez l'ID du produit"><br>
+                    <button class="research-btn" onclick="followersProducts()">Rechercher</button>
+                </div>
+            </div>
 
             <p id="time">Temps de réponse : </p>
             <div id="response"></div>
         </div>
+        <canvas id="requestChart" width="400" height="200"></canvas>
+        <table id="historyTable">
+            <thead>
+                <tr>
+                    <th>Date et Heure</th>
+                    <th>Nom de la Requête</th>
+                    <th>Temps de Réponse (ms)</th>
+                    <th>Type de Base</th>
+                    <th>Paramètres</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Les lignes d'historique seront ajoutées ici -->
+            </tbody>
+        </table>
+        <!-- Section pour afficher les paramètres -->
+        <div id="paramsModal" style="display: none;">
+            <h3>Paramètres de la Requête</h3>
+            <pre id="paramsContent"></pre>
+            <button onclick="closeParamsModal()">Fermer</button>
+        </div>
     </div>
+
 
     <script src="app.js"></script>
 </body>
