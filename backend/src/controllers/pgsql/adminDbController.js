@@ -33,14 +33,19 @@ const runSetupSQL = (req, res) => {
 };
 
 
+//////////////////////////////////
+// Insérer des données massives //
+//////////////////////////////////
+
 // Fonction pour insérer des données massives
 const insertMassiveData = async (req, res) => {
     try {
+        const { nbUser, nbProduct } = req.body;
         console.log("Début de l'insertion des données...");
 
         await pool.query("BEGIN");
-        await insertUser(1000);
-        await insertProduct(100);
+        await insertUser(nbUser);
+        await insertProduct(nbProduct);
         await pool.query("COMMIT");
 
         await pool.query("BEGIN");
@@ -62,6 +67,89 @@ const insertMassiveData = async (req, res) => {
     }
 };
 
+const insertMassiveUser = async (req, res) => {
+    try {
+        const { nbUser } = req.body;
+        console.log("Début de l'insertion des utilisateurs...");
+
+        await pool.query("BEGIN");
+        await insertUser(nbUser);
+        await pool.query("COMMIT");
+
+        console.log("Insertion des utilisateurs terminée !");
+        return res.json({ message: "Utilisateurs insérés avec succès dans PostgreSQL" });
+
+    } catch (error) {
+        // Rollback si erreur
+        await pool.query("ROLLBACK");
+        console.error("Erreur lors de l'insertion des utilisateurs :", error);
+        return res.status(500).json({ error: "Erreur lors de l'insertion des utilisateurs" });
+    }
+};
+
+const insertMassiveProduct = async (req, res) => {
+    try {
+        const { nbProduct } = req.body;
+        console.log("Début de l'insertion des produits...");
+
+        await pool.query("BEGIN");
+        await insertProduct(nbProduct);
+        await pool.query("COMMIT");
+
+        console.log("Insertion des produits terminée !");
+        return res.json({ message: "Produits insérés avec succès dans PostgreSQL" });
+
+    } catch (error) {
+        // Rollback si erreur
+        await pool.query("ROLLBACK");
+        console.error("Erreur lors de l'insertion des produits :", error);
+        return res.status(500).json({ error: "Erreur lors de l'insertion des produits" });
+    }
+};
+
+const insertMassiveFollower = async (req, res) => {
+    try {
+        console.log("Début de l'insertion des followers...");
+
+        await pool.query("BEGIN");
+        await insertFollower();
+        await pool.query("COMMIT");
+
+        console.log("Insertion des followers terminée !");
+        return res.json({ message: "Followers insérés avec succès dans PostgreSQL" });
+
+    } catch (error) {
+        // Rollback si erreur
+        await pool.query("ROLLBACK");
+        console.error("Erreur lors de l'insertion des followers :", error);
+        return res.status(500).json({ error: "Erreur lors de l'insertion des followers" });
+    }
+};
+
+const insertMassiveOwn = async (req, res) => {
+    try {
+        console.log("Début de l'insertion des achats...");
+
+        await pool.query("BEGIN");
+        await insertOwn();
+        await pool.query("COMMIT");
+
+        console.log("Insertion des achats terminée !");
+        return res.json({ message: "Achats insérés avec succès dans PostgreSQL" });
+
+    } catch (error) {
+        // Rollback si erreur
+        await pool.query("ROLLBACK");
+        console.error("Erreur lors de l'insertion des achats :", error);
+        return res.status(500).json({ error: "Erreur lors de l'insertion des achats" });
+    }
+};
+
+
+
+/////////////////////////////////////
+// Fonction d'insertion de données //
+/////////////////////////////////////
 
 // Fonction pour insérer des utilisateurs
 const insertUser = async (nbUser) => {
@@ -210,4 +298,4 @@ const insertOwn = async () => {
 
 
 
-module.exports = { runSetupSQL, insertMassiveData };
+module.exports = { runSetupSQL, insertMassiveData, insertMassiveUser, insertMassiveProduct, insertMassiveFollower, insertMassiveOwn };
