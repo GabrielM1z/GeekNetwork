@@ -412,3 +412,114 @@ function openParamsModal(params) {
 function closeParamsModal() {
     document.getElementById('paramsModal').style.display = 'none'; // Masquer le modal
 }
+
+
+
+
+
+
+
+
+
+// Fonction pour mettre à jour les champs en fonction de la base de données choisie
+function updateFormFields() {
+    const db = document.getElementById("db").value;
+    const action = document.getElementById("action").value;
+    console.log(`Base de données: ${db}, Action: ${action}`);
+}
+
+// Fonction pour afficher ou masquer le champ de saisie du nombre
+function toggleQuantityField() {
+    const action = document.getElementById("action").value;
+    const quantityUserInput = document.getElementById("quantityUserInput");
+    const quantityProductInput = document.getElementById("quantityProductInput");
+
+    if (action === 'insert-user') {
+        quantityUserInput.style.display = 'block';
+        quantityProductInput.style.display = 'none';
+    } else if (action === 'insert-product') {
+        quantityUserInput.style.display = 'none';
+        quantityProductInput.style.display = 'block';
+    } else if (action === 'insert-massive') {
+        quantityUserInput.style.display = 'block';
+        quantityProductInput.style.display = 'block';
+    } else {
+        quantityUserInput.style.display = 'none';
+        quantityProductInput.style.display = 'none';
+    }
+}
+
+
+// Fonction pour gérer les actions (initialisation et insertion)
+function handleAction() {
+    const db = document.getElementById("db").value;
+    const action = document.getElementById("action").value;
+    const nbUser = document.getElementById("nbUser").value;
+    const nbProduct = document.getElementById("nbProduct").value;
+
+    let route = '';
+
+    // Choisir la route en fonction de la base de données et de l'action
+    if (action === 'init') {
+        if (db === 'pgsql') {
+            route = `/API/init-pgsql`;
+        } else if (db === 'neo4j') {
+            route = `/API/init-neo4j`;
+        }
+    } else if (action === 'insert-user') {
+        if (db === 'pgsql') {
+            route = `/API/insert-user-pgsql`;
+        } else if (db === 'neo4j') {
+            route = `/API/insert-user-neo4j`;
+        }
+    } else if (action === 'insert-product') {
+        if (db === 'pgsql') {
+            route = `/API/insert-product-pgsql`;
+        } else if (db === 'neo4j') {
+            route = `/API/insert-product-neo4j`;
+        }
+    } else if (action === 'insert-follower') {
+        if (db === 'pgsql') {
+            route = `/API/insert-follower-pgsql`;
+        } else if (db === 'neo4j') {
+            route = `/API/insert-follower-neo4j`;
+        }
+    } else if (action === 'insert-own') {
+        if (db === 'pgsql') {
+            route = `/API/insert-own-pgsql`;
+        } else if (db === 'neo4j') {
+            route = `/API/insert-own-neo4j`;
+        }
+    } else if (action === 'insert-massive') {
+        if (db === 'pgsql') {
+            route = `/API/insert-massive-pgsql`;
+        } else if (db === 'neo4j') {
+            route = `/API/insert-massive-neo4j`;
+        }
+    }
+
+    // Construction du corps de la requête selon l'action sélectionnée
+    let body = null;
+    if (action === 'insert-user') {
+        body = JSON.stringify({ nbUser: nbUser });
+    } else if (action === 'insert-product') {
+        body = JSON.stringify({ nbProduct: nbProduct });
+    } else if (action === 'insert-massive') {
+        body = JSON.stringify({ nbUser: nbUser, nbProduct: nbProduct });
+    }
+
+    // Envoi de la requête en fonction de l'action sélectionnée
+    fetch(route, {
+        method: action === 'insert-user' || action === 'insert-product' || action === 'insert-massive' ? 'POST' : 'GET',
+        headers: body ? { 'Content-Type': 'application/json' } : {},
+        body: body
+    })
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById("initResponse").innerText = 'Opération réussie : ' + data.message;
+        })
+        .catch(error => {
+            document.getElementById("initResponse").innerText = 'Erreur : ' + error.message;
+        });
+
+}

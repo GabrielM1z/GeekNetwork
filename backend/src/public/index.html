@@ -12,20 +12,43 @@
 <body>
     <div id="app">
         <h1>Choisir la base de données</h1>
-        <!-- Section pour initialiser les bases de données -->
-        <div class="action-buttons">
-            <button onclick="initSql()">Initialiser PostgreSQL</button>
-            <button onclick="initNoSql()">Initialiser Neo4j</button>
-            <div id="initResponse" style="color: red; font-weight: bold;"></div>
-        </div>
-
         <!-- Sélection de la base de données -->
         <div class="db-selection">
             <label for="db">Choisir une base de données :</label>
-            <select id="db" name="db">
-                <option value="sql" selected>PostgreSQL</option>
-                <option value="nosql">Neo4j</option>
+            <select id="db" name="db" onchange="updateFormFields()">
+                <option value="pgsql" selected>PostgreSQL</option>
+                <option value="neo4j">Neo4j</option>
             </select>
+        </div>
+
+        <!-- Sélection du type d'action -->
+        <div class="action-selection">
+            <label for="action">Choisir une action :</label>
+            <select id="action" name="action" onchange="toggleQuantityField()">
+                <option value="init">Initialiser</option>
+                <option value="insert-user">Insérer Utilisateur</option>
+                <option value="insert-product">Insérer Produit</option>
+                <option value="insert-follower">Insérer Follower</option>
+                <option value="insert-own">Insérer Propriétaire</option>
+                <option value="insert-massive">Insérer Massivement</option>
+            </select>
+        </div>
+
+        <!-- Saisie du nombre pour insert-user et insert-product -->
+        <div class="quantity-input" id="quantityUserInput" style="display:none;">
+            <label for="nbUser">Nombre d'utilisateurs :</label>
+            <input type="number" id="nbUser" name="nbUser" min="1" value="1">
+        </div>
+
+        <div class="quantity-input" id="quantityProductInput" style="display:none;">
+            <label for="nbProduct">Nombre de produits :</label>
+            <input type="number" id="nbProduct" name="nbProduct" min="1" value="1">
+        </div>
+
+        <!-- Boutons pour exécuter l'action -->
+        <div class="action-buttons">
+            <button onclick="handleAction()">Exécuter l'action</button>
+            <div id="initResponse" style="color: red; font-weight: bold;"></div>
         </div>
 
         <!-- Section des requêtes API -->
