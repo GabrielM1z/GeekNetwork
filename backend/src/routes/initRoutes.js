@@ -45,20 +45,20 @@ router.post("/insert-product-neo4j", (req, res) => {
 });
 
 // insérer des followers
-router.post("/insert-follower-pgsql", (req, res) => {
+router.get("/insert-follower-pgsql", (req, res) => {
     insertMassiveFollowerSQL(req, res);
 });
 
-router.post("/insert-follower-neo4j", (req, res) => {
+router.get("/insert-follower-neo4j", (req, res) => {
     insertMassiveFollowerNoSQL(req, res);
 });
 
 // insérer des propriétaires
-router.post("/insert-own-pgsql", (req, res) => {
+router.get("/insert-own-pgsql", (req, res) => {
     insertMassiveOwnSQL(req, res);
 });
 
-router.post("/insert-own-neo4j", (req, res) => {
+router.get("/insert-own-neo4j", (req, res) => {
     insertMassiveOwnNoSQL(req, res);
 });
 

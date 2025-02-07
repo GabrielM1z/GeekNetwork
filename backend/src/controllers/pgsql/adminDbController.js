@@ -124,30 +124,22 @@ const insertMassiveOwnSQL = async (req, res) => {
 // Fonction pour insérer des utilisateurs
 const insertUser = async (nbUser) => {
     console.log("Début de l'ajout des utilisateurs...");
-    let userQueries = [];
     for (let i = 0; i < nbUser; i++) {
         const firstName = faker.faker.person.firstName();
         const lastName = faker.faker.person.lastName();
-        userQueries.push(
-            pool.query('INSERT INTO "User" (firstname, lastname) VALUES ($1, $2)', [firstName, lastName])
-        );
+        await pool.query('INSERT INTO "User" (firstname, lastname) VALUES ($1, $2)', [firstName, lastName]);
     }
-    await Promise.all(userQueries); // ✅ Attendre que toutes les requêtes soient terminées
     console.log("Ajout des utilisateurs terminé !");
 };
 
 // Fonction pour insérer des produits
 const insertProduct = async (nbProduct) => {
     console.log("Début de l'ajout des produits...");
-    let productQueries = [];
     for (let i = 0; i < nbProduct; i++) {
         const productName = faker.faker.commerce.productName();
         const productPrice = faker.faker.commerce.price();
-        productQueries.push(
-            pool.query('INSERT INTO "Product" (name, price) VALUES ($1, $2)', [productName, productPrice])
-        );
+        await pool.query('INSERT INTO "Product" (name, price) VALUES ($1, $2)', [productName, productPrice]);
     }
-    await Promise.all(productQueries); // ✅ Attendre que toutes les requêtes soient terminées
     console.log("Ajout des produits terminé !");
 };
 
@@ -172,8 +164,6 @@ const insertFollower = async () => {
         // Récupérer tous les IDs d'utilisateurs
         const { rows: allUserIds } = await pool.query('SELECT id FROM "User";');
 
-        let followQueries = [];
-
         for (let user of usersWithoutFollowers) {
             let numFollowers = Math.floor(Math.random() * 20) + 1; // 1 à 20 followers
             let followers = new Set();
@@ -184,16 +174,12 @@ const insertFollower = async () => {
             }
 
             for (let follower of followers) {
-                followQueries.push(
-                    pool.query(
-                        'INSERT INTO "Follow" (id_user, id_follower) VALUES ($1, $2) ON CONFLICT DO NOTHING',
-                        [user.id, follower]
-                    )
+                await pool.query(
+                    'INSERT INTO "Follow" (id_user, id_follower) VALUES ($1, $2) ON CONFLICT DO NOTHING',
+                    [user.id, follower]
                 );
             }
         }
-
-        await Promise.all(followQueries); // ✅ Attendre que toutes les requêtes soient terminées
 
         console.log("Ajout des followers terminé !");
     } catch (error) {
@@ -228,8 +214,6 @@ const insertOwn = async () => {
             return;
         }
 
-        let ownQueries = [];
-
         for (let user of usersWithoutProducts) {
 
             // Vérifier que l'utilisateur existe avant d'ajouter un achat
@@ -248,17 +232,13 @@ const insertOwn = async () => {
                 }
 
                 for (let product of selectedProducts) {
-                    ownQueries.push(
-                        pool.query(
-                            'INSERT INTO "Own" (id_user, id_product) VALUES ($1, $2) ON CONFLICT DO NOTHING',
-                            [user.id, product]
-                        )
+                    await pool.query(
+                        'INSERT INTO "Own" (id_user, id_product) VALUES ($1, $2) ON CONFLICT DO NOTHING',
+                        [user.id, product]
                     );
                 }
             }
         }
-
-        await Promise.all(ownQueries); // ✅ Attendre que toutes les requêtes soient terminées
 
         console.log("Ajout des achats terminé !");
     } catch (error) {
