@@ -7,6 +7,7 @@ require("dotenv").config();
 const userRoutes = require("./routes/userRoutes");
 const initRoutes = require("./routes/initRoutes");
 const purchaseRoutes = require("./routes/purchaseRoutes");
+const followerRoutes = require("./routes/followerRoutes");
 
 const app = express();
 app.use(cors());
@@ -19,6 +20,7 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use("/api", userRoutes);
 app.use("/api", initRoutes);
 app.use("/api", purchaseRoutes);
+app.use("/api", followerRoutes);
 
 // Lancement du serveur
 const PORT = process.env.PORT || 5000;
