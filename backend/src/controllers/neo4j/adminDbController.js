@@ -1,6 +1,10 @@
 const neo4j = require("neo4j-driver");
 const fs = require("fs");
 const path = require("path");
+const faker = require('@faker-js/faker'); // Générateur de données fictives
+const { use } = require("../../routes/initRoutes");
+const { response } = require("express");
+
 
 // Connexion à Neo4j
 const driver = neo4j.driver(
@@ -16,26 +20,31 @@ const runSetupNoSQL = async (req, res) => {
     try {
         // Lire le fichier setup.cypher
         const query = fs.readFileSync(filePath, "utf8");
-
-        // Ouvrir une session Neo4j
         const session = driver.session();
-
-        // Diviser les requêtes en un tableau
         const queries = query.split(';').filter(q => q.trim() !== '');
 
         // Exécuter chaque requête séparément
+        const startTime = performance.now();
         for (let q of queries) {
             await session.run(q.trim());
         }
+        const endTime = performance.now();
+        const executionTime = (endTime - startTime).toFixed(2);
 
-        // Fermer la session
         await session.close();
 
         console.log("Base de données Neo4j initialisée !");
-        res.json({ message: "Base de données Neo4j initialisée avec succès" });
+
+        res.json({
+            response: "Base de données Neo4j initialisée avec succès",
+            response_time: executionTime
+        });
     } catch (error) {
         console.error("Erreur lors de l'initialisation de Neo4j :", error);
-        res.status(500).json({ error: "Échec de l'initialisation de Neo4j" });
+        res.status(500).json({
+            response: "Échec de l'initialisation de Neo4j",
+            response_time: 0
+        });
     }
 };
 
@@ -56,18 +65,27 @@ const insertMassiveUserNoSQL = async (req, res) => {
         const tx = session.beginTransaction();
 
         // Insérer les utilisateurs
+        const startTime = performance.now();
         await insertUser(nbUser, tx);  // Passer la transaction à la fonction d'insertion
+        const endTime = performance.now();
+        const executionTime = (endTime - startTime).toFixed(2);
 
         // Valider la transaction
         await tx.commit();
         console.log("Insertion des utilisateurs terminée !");
-        res.json({ message: "Utilisateurs insérés avec succès dans Neo4j" });
+        res.json({
+            response: "Utilisateurs insérés avec succès dans Neo4j",
+            response_time: executionTime
+        });
 
     } catch (error) {
         // Annuler la transaction en cas d'erreur
         console.error("Erreur lors de l'insertion des utilisateurs :", error);
         await session.rollback();
-        res.status(500).json({ error: "Erreur lors de l'insertion des utilisateurs" });
+        res.status(500).json({
+            response: "Erreur lors de l'insertion des utilisateurs",
+            response_time: 0
+        });
     } finally {
         // Fermer la session Neo4j
         await session.close();
@@ -86,18 +104,27 @@ const insertMassiveProductNoSQL = async (req, res) => {
         const tx = session.beginTransaction();
 
         // Insérer les produits
+        const startTime = performance.now();
         await insertProduct(nbProduct, tx);  // Passer la transaction à la fonction d'insertion
+        const endTime = performance.now();
+        const executionTime = (endTime - startTime).toFixed(2);
 
         // Valider la transaction
         await tx.commit();
         console.log("Insertion des produits terminée !");
-        res.json({ message: "Produits insérés avec succès dans Neo4j" });
+        res.json({
+            response: "Produits insérés avec succès dans Neo4j",
+            response_time: executionTime
+        });
 
     } catch (error) {
         // Annuler la transaction en cas d'erreur
         console.error("Erreur lors de l'insertion des produits :", error);
         await session.rollback();
-        res.status(500).json({ error: "Erreur lors de l'insertion des produits" });
+        res.status(500).json({
+            response: "Erreur lors de l'insertion des produits",
+            response_time: 0
+        });
     } finally {
         // Fermer la session Neo4j
         await session.close();
@@ -115,18 +142,27 @@ const insertMassiveFollowerNoSQL = async (req, res) => {
         const tx = session.beginTransaction();
 
         // Insérer les followers
+        const startTime = performance.now();
         await insertFollower(tx);  // Passer la transaction à la fonction d'insertion
+        const endTime = performance.now();
+        const executionTime = (endTime - startTime).toFixed(2);
 
         // Valider la transaction
         await tx.commit();
         console.log("Insertion des followers terminée !");
-        res.json({ message: "Followers insérés avec succès dans Neo4j" });
+        res.json({
+            response: "Followers insérés avec succès dans Neo4j",
+            response_time: executionTime
+        });
 
     } catch (error) {
         // Annuler la transaction en cas d'erreur
         console.error("Erreur lors de l'insertion des followers :", error);
         await session.rollback();
-        res.status(500).json({ error: "Erreur lors de l'insertion des followers" });
+        res.status(500).json({
+            error: "Erreur lors de l'insertion des followers",
+            response_time: 0
+        });
     } finally {
         // Fermer la session Neo4j
         await session.close();
@@ -144,18 +180,27 @@ const insertMassiveOwnNoSQL = async (req, res) => {
         const tx = session.beginTransaction();
 
         // Insérer les achats
+        const startTime = performance.now();
         await insertOwn(tx);  // Passer la transaction à la fonction d'insertion
+        const endTime = performance.now();
+        const executionTime = (endTime - startTime).toFixed(2);
 
         // Valider la transaction
         await tx.commit();
         console.log("Insertion des achats terminée !");
-        res.json({ message: "Achats insérés avec succès dans Neo4j" });
+        res.json({
+            repsonse: "Achats insérés avec succès dans Neo4j",
+            response_time: executionTime
+        });
 
     } catch (error) {
         // Annuler la transaction en cas d'erreur
         console.error("Erreur lors de l'insertion des achats :", error);
         await session.rollback();
-        res.status(500).json({ error: "Erreur lors de l'insertion des achats" });
+        res.status(500).json({
+            response: "Erreur lors de l'insertion des achats",
+            response_time: 0
+        });
     } finally {
         // Fermer la session Neo4j
         await session.close();
@@ -177,9 +222,9 @@ const insertUser = async (nbUser, tx) => {
         const lastName = faker.faker.person.lastName();
 
         const cypherQuery = `
-            CREATE (u:User {id: '${faker.datatype.uuid()}', firstName: '${firstName}', lastName: '${lastName}'})
+            CREATE (u:User {id: randomUUID(), firstName: $firstName, lastName: $lastName})
         `;
-        await tx.run(cypherQuery); // Utilisation de la transaction pour exécuter la requête
+        await tx.run(cypherQuery, { firstName, lastName });
     }
 
     console.log("Ajout des utilisateurs terminé !");
@@ -194,9 +239,9 @@ const insertProduct = async (nbProduct, tx) => {
         const productPrice = faker.faker.commerce.price();
 
         const cypherQuery = `
-            CREATE (p:Product {id: '${faker.datatype.uuid()}', name: '${productName}', price: ${productPrice}})
+            CREATE (p:Product {id: randomUUID(), name: $productName, price: $productPrice})
         `;
-        await tx.run(cypherQuery); // Utilisation de la transaction pour exécuter la requête
+        await tx.run(cypherQuery, { productName, productPrice }); // Utilisation de la transaction pour exécuter la requête
     }
 
     console.log("Ajout des produits terminé !");
@@ -237,11 +282,11 @@ const insertFollower = async (tx) => {
 
         for (let followerId of followers) {
             const cypherQuery = `
-                MATCH (u:User {id: '${userId}'})
-                MATCH (f:User {id: '${followerId}'})
+                MATCH (u:User {id: $userId})
+                MATCH (f:User {id: $followerId})
                 MERGE (f)-[:FOLLOWS]->(u)
             `;
-            await tx.run(cypherQuery); // Utilisation de la transaction pour exécuter la requête
+            await tx.run(cypherQuery, { userId, followerId }); // Utilisation de la transaction pour exécuter la requête
         }
     }
 
@@ -283,11 +328,11 @@ const insertOwn = async (tx) => {
 
         for (let productId of selectedProducts) {
             const cypherQuery = `
-                MATCH (u:User {id: '${userId}'})
-                MATCH (p:Product {id: '${productId}'})
+                MATCH (u:User {id: $userId})
+                MATCH (p:Product {id: $productId})
                 MERGE (u)-[:OWNS]->(p)
             `;
-            await tx.run(cypherQuery); // Utilisation de la transaction pour exécuter la requête
+            await tx.run(cypherQuery, { userId, productId }); // Utilisation de la transaction pour exécuter la requête
         }
     }
 

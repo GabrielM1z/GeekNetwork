@@ -2,6 +2,7 @@ const { Pool } = require("pg");
 const fs = require("fs");
 const path = require("path");
 const faker = require('@faker-js/faker'); // Générateur de données fictives
+const { error } = require("console");
 
 
 // Connexion à PostgreSQL
@@ -23,11 +24,22 @@ const runSetupSQL = (req, res) => {
             return res.status(500).json({ error: "Impossible de lire le fichier SQL" });
         }
 
+        const startTime = performance.now(); // 🔹 Début du timer
         pool.query(sql)
-            .then(() => res.json({ message: "Base de données initialisée avec succès" }))
+            .then(() => {
+                const endTime = performance.now(); // 🔹 Fin du timer
+                const executionTime = (endTime - startTime).toFixed(2); // 🔹 Calcul du temps écoulé
+                res.json({
+                    response: "Base de données initialisée avec succès",
+                    response_time: executionTime
+                })
+            })
             .catch(err => {
                 console.error("Erreur lors de l'exécution du SQL :", err);
-                res.status(500).json({ error: "Échec de l'initialisation de la base" });
+                res.status(500).json({
+                    response: "Échec de l'initialisation de la base",
+                    response_time: 0,
+                });
             });
     });
 };
@@ -42,18 +54,27 @@ const insertMassiveUserSQL = async (req, res) => {
         const { nbUser } = req.body;
         console.log("Début de l'insertion des utilisateurs...");
 
+        const startTime = performance.now();
         await pool.query("BEGIN");
         await insertUser(nbUser);
         await pool.query("COMMIT");
+        const endTime = performance.now();
+        const executionTime = (endTime - startTime).toFixed(2);
 
         console.log("Insertion des utilisateurs terminée !");
-        return res.json({ message: "Utilisateurs insérés avec succès dans PostgreSQL" });
+        return res.json({
+            response: "Utilisateurs insérés avec succès dans PostgreSQL",
+            response_time: executionTime
+        });
 
     } catch (error) {
         // Rollback si erreur
         await pool.query("ROLLBACK");
         console.error("Erreur lors de l'insertion des utilisateurs :", error);
-        return res.status(500).json({ error: "Erreur lors de l'insertion des utilisateurs" });
+        return res.status(500).json({
+            response: "Erreur lors de l'insertion des utilisateurs",
+            response_time: 0
+        });
     }
 };
 
@@ -62,18 +83,26 @@ const insertMassiveProductSQL = async (req, res) => {
         const { nbProduct } = req.body;
         console.log("Début de l'insertion des produits...");
 
+        const startTime = performance.now();
         await pool.query("BEGIN");
         await insertProduct(nbProduct);
         await pool.query("COMMIT");
+        const endTime = performance.now();
+        const executionTime = (endTime - startTime).toFixed(2);
 
         console.log("Insertion des produits terminée !");
-        return res.json({ message: "Produits insérés avec succès dans PostgreSQL" });
+        return res.json({
+            response: "Produits insérés avec succès dans PostgreSQL",
+            response_time: executionTime
+        });
 
     } catch (error) {
         // Rollback si erreur
         await pool.query("ROLLBACK");
         console.error("Erreur lors de l'insertion des produits :", error);
-        return res.status(500).json({ error: "Erreur lors de l'insertion des produits" });
+        return res.status(500).json({
+            error: "Erreur lors de l'insertion des produits"
+        });
     }
 };
 
@@ -81,18 +110,27 @@ const insertMassiveFollowerSQL = async (req, res) => {
     try {
         console.log("Début de l'insertion des followers...");
 
+        const startTime = performance.now();
         await pool.query("BEGIN");
         await insertFollower();
         await pool.query("COMMIT");
+        const endTime = performance.now();
+        const executionTime = (endTime - startTime).toFixed(2);
 
         console.log("Insertion des followers terminée !");
-        return res.json({ message: "Followers insérés avec succès dans PostgreSQL" });
+        return res.json({
+            response: "Followers insérés avec succès dans PostgreSQL",
+            response_time: executionTime
+        });
 
     } catch (error) {
         // Rollback si erreur
         await pool.query("ROLLBACK");
         console.error("Erreur lors de l'insertion des followers :", error);
-        return res.status(500).json({ error: "Erreur lors de l'insertion des followers" });
+        return res.status(500).json({
+            response: "Erreur lors de l'insertion des followers",
+            response_time: 0
+        });
     }
 };
 
@@ -100,18 +138,27 @@ const insertMassiveOwnSQL = async (req, res) => {
     try {
         console.log("Début de l'insertion des achats...");
 
+        const startTime = performance.now();
         await pool.query("BEGIN");
         await insertOwn();
         await pool.query("COMMIT");
+        const endTime = performance.now();
+        const executionTime = (endTime - startTime).toFixed(2);
 
         console.log("Insertion des achats terminée !");
-        return res.json({ message: "Achats insérés avec succès dans PostgreSQL" });
+        return res.json({
+            response: "Achats insérés avec succès dans PostgreSQL",
+            response_time: executionTime
+        });
 
     } catch (error) {
         // Rollback si erreur
         await pool.query("ROLLBACK");
         console.error("Erreur lors de l'insertion des achats :", error);
-        return res.status(500).json({ error: "Erreur lors de l'insertion des achats" });
+        return res.status(500).json({
+            response: "Erreur lors de l'insertion des achats",
+            response_time: 0
+        });
     }
 };
 
