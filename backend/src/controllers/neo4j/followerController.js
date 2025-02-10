@@ -15,17 +15,26 @@ const getFollowersProductsNeo4j = (userId, depth, res) => {
         ORDER BY quantity DESC
     `;
 
+    const startTime = performance.now();
     session.run(query, { userId: userId })
         .then(result => {
+            const endTime = performance.now();
+            const executionTime = (endTime - startTime).toFixed(2);
             const products = result.records.map(record => ({
                 product: record.get('product'),
-                quantity: record.get('quantity')
+                quantity: record.get('quantity'),
             }));
-            res.json({ products: products });
+            res.json({
+                products: products,
+                response_time: executionTime
+            });
         })
         .catch(error => {
             console.error("Error running query:", error);
-            res.status(500).send("An error occurred while fetching data.");
+            res.status(500).send({
+                error: "An error occurred while fetching data.",
+                response_time: 0
+            });
         })
         .finally(() => {
             session.close();

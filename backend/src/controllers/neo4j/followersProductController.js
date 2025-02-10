@@ -15,18 +15,27 @@ const getFollowersProductsForSpecificProductNeo4j = (userId, depth, productId, r
         ORDER BY purchase_count DESC
     `;
 
+    const startTime = performance.now();
     session.run(query, { userId: userId, productId: productId })
         .then(result => {
+            const endTime = performance.now();
+            const executionTime = (endTime - startTime).toFixed(2);
             const products = result.records.map(record => ({
                 product_id: record.get('product_id'),
                 product_name: record.get('product_name'),
                 purchase_count: record.get('purchase_count').toInt() // Convertir le résultat en entier
             }));
-            res.json({ products: products });
+            res.json({
+                products: products,
+                response_time: executionTime
+            });
         })
         .catch(error => {
             console.error("Error running query:", error);
-            res.status(500).send("An error occurred while fetching data.");
+            res.status(500).send({
+                error: "An error occurred while fetching data.",
+                response_time: 0
+            });
         })
         .finally(() => {
             session.close();

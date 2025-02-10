@@ -29,13 +29,22 @@ const getFollowersProductsSQL = (userId, depth, res) => {
         ORDER BY purchase_count DESC;
     `;
 
+    const startTime = performance.now();
     pool.query(query, [userId, depth])  // Utilisation des paramètres userId et depth
         .then(result => {
-            res.json({ products: result.rows });
+            const endTime = performance.now();
+            const executionTime = (endTime - startTime).toFixed(2);
+            res.json({
+                products: result.rows,
+                response_time: executionTime
+            });
         })
         .catch(err => {
             console.error("Erreur PostgreSQL:", err);
-            res.status(500).json({ error: "Erreur de récupération des produits achetés par les followers" });
+            res.status(500).json({
+                error: "Erreur de récupération des produits achetés par les followers",
+                response_time: 0,
+            });
         });
 };
 
