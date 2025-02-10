@@ -10,7 +10,6 @@
 html,
 body {
     width: 100%;
-    height: 100%;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background-color: #f4f4f9;
     color: #333;
@@ -111,4 +110,24 @@ canvas {
     width: 100% !important;
     height: auto !important;
     margin-top: 20px;
+}
+
+#time {
+    display: none;
+    font-size: 18px;
+    font-weight: bold;
+    color: #d9534f;
+    /* Rouge pour attirer l'attention */
+    background-color: #f8d7da;
+    /* Fond légèrement rosé */
+    padding: 10px;
+    border-radius: 5px;
+    text-align: center;
+    margin-top: 20px;
+    border: 1px solid #d9534f;
+}
+
+/* Lorsque l'élément doit être affiché */
+#time.visible {
+    display: inline-block;
 }

@@ -4,6 +4,7 @@ export function toggleQuantityField() {
     document.getElementById("quantityProductInput").classList.toggle("hidden", action !== 'insert-product' && action !== 'insert-massive');
 }
 
+/*
 export function handleFormSubmission(route, body) {
     fetch(route, {
         method: 'POST',
@@ -18,10 +19,11 @@ export function handleFormSubmission(route, body) {
             document.getElementById("initResponse").innerText = 'Erreur : ' + error.message;
         });
 }
-
 // Fonction pour mettre à jour les champs en fonction de la base de données choisie
 export function updateFormFields() {
     const db = document.getElementById("db").value;
     const action = document.getElementById("action").value;
     console.log(`Base de données: ${db}, Action: ${action}`);
 }
+
+*/

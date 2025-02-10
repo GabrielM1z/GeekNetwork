@@ -4,7 +4,7 @@ const ctx = document.getElementById('requestChart').getContext('2d');
 
 // Variable pour suivre le numéro de la requête
 window.requestCount = 0; // Rend requestCount accessible globalement
-
+window.actionsList = [];
 
 
 window.requestChart = new Chart(ctx, {
@@ -24,8 +24,9 @@ window.requestChart = new Chart(ctx, {
             tooltip: {
                 callbacks: {
                     title: function (tooltipItems) {
-                        let action = window.lastAction || "Action inconnue"; // Récupère l'action courante
-                        return `Requête #${tooltipItems[0].label} - ${action}`;
+                        let index = tooltipItems[0].dataIndex; // Récupère l'index du point
+                        let action = window.actionsList?.[index] || "Action inconnue"; // Récupère l'action correspondante
+                        return `Requête #${index + 1} - ${action}`; // Affiche dans le titre
                     },
                     label: function (tooltipItem) {
                         return `Temps: ${tooltipItem.raw} ms`;

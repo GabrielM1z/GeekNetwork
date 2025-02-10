@@ -1,6 +1,12 @@
-import { addToHistory } from "../components/history.js";
 import "./charts.js";
+import { trace_requete } from "./main.js";
 
+// Fonction pour afficher/masquer les nombres de user et product
+export function toggleQuantityField() {
+    const action = document.getElementById("action").value;
+    document.getElementById("quantityUserInput").classList.toggle("hidden", action !== 'insert-user' && action !== 'insert-massive');
+    document.getElementById("quantityProductInput").classList.toggle("hidden", action !== 'insert-product' && action !== 'insert-massive');
+}
 
 // Fonction pour afficher/masquer les champs de la requête followers
 export function toggleFollowersFields() {
@@ -15,12 +21,13 @@ export function toggleFollowersProductsFields() {
 }
 
 // Fonction pour gérer les actions (initialisation et insertion)
-export function handleAction() {
+export async function handleAction() {
     const db = document.getElementById("db").value;
     const action = document.getElementById("action").value;
+    console.log("é", action)
     const nbUser = document.getElementById("nbUser").value;
     const nbProduct = document.getElementById("nbProduct").value;
-
+    let time = 0
     let route = '';
 
     // Choisir la route en fonction de la base de données et de l'action
@@ -73,35 +80,18 @@ export function handleAction() {
     }
 
     // Envoi de la requête en fonction de l'action sélectionnée
-    fetch(route, {
+    await fetch(route, {
         method: action === 'insert-user' || action === 'insert-product' || action === 'insert-massive' ? 'POST' : 'GET',
         headers: body ? { 'Content-Type': 'application/json' } : {},
         body: body
     })
         .then(response => response.json())
         .then(data => {
-            document.getElementById("initResponse").innerText = 'Opération réussie : ' + data.message;
+            document.getElementById("initResponse").innerText = 'Opération réussie : ' + data.response;
+            time = data.response_time
         })
         .catch(error => {
-            document.getElementById("initResponse").innerText = 'Erreur : ' + error.message;
+            document.getElementById("initResponse").innerText = 'Erreur : ' + error.response;
         });
-
-    const elapsedTime = Math.floor(Math.random() * 1001);
-
-    addToHistory(action, elapsedTime, db, body)
-
-    // Mettre à jour le graphique avec le temps de la requête
-    if (window.requestChart) { // <-- Utilise `window.requestChart`
-        window.requestCount++;
-        window.requestChart.data.labels.push(requestCount);
-        //window.requestChart.data.title.push("Requête #" + requestCount + " - " + action);
-        window.lastAction = action; // ✅ Sauvegarde la dernière action
-
-        window.requestChart.data.datasets[0].data.push(elapsedTime);
-        window.requestChart.update();
-    } else {
-        console.error("requestChart est toujours undefined !");
-    }
-
-
+    trace_requete(action, time, db, body)
 }
