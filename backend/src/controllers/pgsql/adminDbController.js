@@ -49,6 +49,43 @@ const runSetupSQL = (req, res) => {
 // Insérer des données massives //
 //////////////////////////////////
 
+const insertMassiveSQL = async (req, res) => {
+    try {
+        const { nbUser, nbProduct } = req.body;
+        console.log("Début de l'insertion massives générales...");
+
+        const startTime = performance.now();
+        await pool.query("BEGIN");
+        await insertUser(nbUser);
+        await pool.query("COMMIT");
+        await pool.query("BEGIN");
+        await insertProduct(nbProduct);
+        await pool.query("COMMIT");
+        await pool.query("BEGIN");
+        await insertFollower();
+        await pool.query("COMMIT");
+        await pool.query("BEGIN");
+        await insertOwn();
+        await pool.query("COMMIT");
+        const endTime = performance.now();
+        const executionTime = (endTime - startTime).toFixed(2);
+
+        console.log("Insertion massive générale terminée !");
+        return res.json({
+            response: "Données insérées avec succès dans PostgreSQL",
+            response_time: executionTime
+        });
+    } catch (error) {
+        // Rollback si erreur
+        await pool.query("ROLLBACK");
+        console.error("Erreur lors de l'insertion massive générale :", error);
+        return res.status(500).json({
+            response: "Erreur lors de l'insertion massive générale",
+            response_time: 0
+        });
+    }
+}
+
 const insertMassiveUserSQL = async (req, res) => {
     try {
         const { nbUser } = req.body;
@@ -202,28 +239,26 @@ const insertFollower = async () => {
             WHERE f.id_user IS NULL;
         `);
 
-        // Vérifier s'il y a des utilisateurs sans followers
         if (usersWithoutFollowers.length === 0) {
             console.log("Tous les utilisateurs ont déjà des followers.");
             return;
         }
 
-        // Récupérer tous les IDs d'utilisateurs
-        const { rows: allUserIds } = await pool.query('SELECT id FROM "User";');
-
         for (let user of usersWithoutFollowers) {
-            let numFollowers = Math.floor(Math.random() * 20) + 1; // 1 à 20 followers
-            let followers = new Set();
+            // Générer un nombre aléatoire de followers (max 20)
+            let numFollowers = Math.floor(Math.random() * 20) + 1;
 
-            while (followers.size < numFollowers) {
-                let randomFollower = allUserIds[Math.floor(Math.random() * allUserIds.length)].id;
-                followers.add(randomFollower);
-            }
+            // Récupérer des followers aléatoires directement en SQL, en évitant l'utilisateur lui-même
+            const { rows: potentialFollowers } = await pool.query(`
+                SELECT id FROM "User"
+                ORDER BY RANDOM()
+                LIMIT $1;
+            `, [numFollowers]);
 
-            for (let follower of followers) {
+            for (let follower of potentialFollowers) {
                 await pool.query(
                     'INSERT INTO "Follow" (id_user, id_follower) VALUES ($1, $2) ON CONFLICT DO NOTHING',
-                    [user.id, follower]
+                    [user.id, follower.id]
                 );
             }
         }
@@ -235,55 +270,39 @@ const insertFollower = async () => {
 };
 
 
+// Fonction pour insérer des achats
 const insertOwn = async () => {
     try {
         console.log("Début de l'ajout des achats...");
 
-        // Récupérer les utilisateurs qui n'ont pas encore acheté de produit
+        // Récupérer les utilisateurs sans produits
         const { rows: usersWithoutProducts } = await pool.query(`
             SELECT u.id FROM "User" u
             LEFT JOIN "Own" o ON u.id = o.id_user
             WHERE o.id_user IS NULL;
         `);
 
-        // Vérifier s'il y a des utilisateurs sans produits
         if (usersWithoutProducts.length === 0) {
             console.log("Tous les utilisateurs possèdent déjà au moins un produit.");
             return;
         }
 
-        // Récupérer tous les produits existants
-        const { rows: allProducts } = await pool.query('SELECT id FROM "Product";');
-
-        // Vérifier qu'il y a bien des produits disponibles
-        if (allProducts.length === 0) {
-            console.log("Aucun produit disponible, impossible d'ajouter des achats.");
-            return;
-        }
-
         for (let user of usersWithoutProducts) {
+            // Générer un nombre aléatoire de produits (max 5)
+            let numProducts = Math.floor(Math.random() * 5) + 1;
 
-            // Vérifier que l'utilisateur existe avant d'ajouter un achat
-            const { rows: userExists } = await pool.query('SELECT id FROM "User" WHERE id = $1', [user.id]);
+            // Récupérer des produits aléatoires directement en SQL
+            const { rows: selectedProducts } = await pool.query(`
+                SELECT id FROM "Product"
+                ORDER BY RANDOM()
+                LIMIT $1;
+            `, [numProducts]);
 
-            if (userExists.length === 0) {
-                console.log(`L'utilisateur avec l'ID ${user.id} n'existe pas. Skipping.`);
-            }
-            else {
-                let numProducts = Math.floor(Math.random() * 5) + 1; // 1 à 5 produits
-                let selectedProducts = new Set();
-
-                while (selectedProducts.size < numProducts) {
-                    let randomProduct = allProducts[Math.floor(Math.random() * allProducts.length)].id;
-                    selectedProducts.add(randomProduct);
-                }
-
-                for (let product of selectedProducts) {
-                    await pool.query(
-                        'INSERT INTO "Own" (id_user, id_product) VALUES ($1, $2) ON CONFLICT DO NOTHING',
-                        [user.id, product]
-                    );
-                }
+            for (let product of selectedProducts) {
+                await pool.query(
+                    'INSERT INTO "Own" (id_user, id_product) VALUES ($1, $2) ON CONFLICT DO NOTHING',
+                    [user.id, product.id]
+                );
             }
         }
 
@@ -295,4 +314,5 @@ const insertOwn = async () => {
 
 
 
-module.exports = { runSetupSQL, insertMassiveUserSQL, insertMassiveProductSQL, insertMassiveFollowerSQL, insertMassiveOwnSQL };
+
+module.exports = { runSetupSQL, insertMassiveUserSQL, insertMassiveProductSQL, insertMassiveFollowerSQL, insertMassiveOwnSQL, insertMassiveSQL };

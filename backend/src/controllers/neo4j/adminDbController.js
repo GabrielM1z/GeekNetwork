@@ -53,6 +53,45 @@ const runSetupNoSQL = async (req, res) => {
 // Insérer des données massives //
 //////////////////////////////////
 
+// Fonction d'insertion massive
+const insertMassiveSQL = async (req, res) => {
+    const { nbUser, nbProduct } = req.body;  // Nombre d'utilisateurs et de produits à insérer
+    console.log("Début de l'insertion massive des données...");
+
+    const session = driver.session();
+
+    try {
+        // Démarrer la transaction
+        const tx = session.beginTransaction();
+
+        const startTime = performance.now();
+        await insertUser(nbUser, tx);
+        await insertProduct(nbProduct, tx);
+        await insertFollower(tx);
+        await insertOwn(tx);
+        const endTime = performance.now();
+        const executionTime = (endTime - startTime).toFixed(2);
+
+        // Valider la transaction
+        await tx.commit();
+        console.log("Insertion massive terminée !");
+        res.json({
+            response: "Données insérées avec succès dans Neo4j",
+            response_time: executionTime
+        })
+    } catch (error) {
+        // Annuler la transaction en cas d'erreur
+        console.error("Erreur lors de l'insertion massive :", error);
+        await session.rollback();
+        res.status(500).json({
+            response: "Erreur lors de l'insertion massive",
+            response_time: 0
+        });
+    } finally {
+        // Fermer la session Neo4j
+        await session.close();
+    }
+}
 // Fonction d'insertion massive pour les utilisateurs
 const insertMassiveUserNoSQL = async (req, res) => {
     const { nbUser } = req.body;  // Nombre d'utilisateurs à insérer

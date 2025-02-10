@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { runSetupNoSQL, insertMassiveUserNoSQL, insertMassiveProductNoSQL, insertMassiveFollowerNoSQL, insertMassiveOwnNoSQL } = require("../controllers/neo4j/adminDbController");
-const { runSetupSQL, insertMassiveUserSQL, insertMassiveProductSQL, insertMassiveFollowerSQL, insertMassiveOwnSQL } = require("../controllers/pgsql/adminDbController");
+const { runSetupSQL, insertMassiveUserSQL, insertMassiveProductSQL, insertMassiveFollowerSQL, insertMassiveOwnSQL, insertMassiveSQL } = require("../controllers/pgsql/adminDbController");
 
 router.get("/init-pgsql", (req, res) => {
     runSetupSQL(req, res);
@@ -13,10 +13,7 @@ router.get("/init-neo4j", (req, res) => {
 
 // insérer des données massives
 router.post("/insert-massive-pgsql", (req, res) => {
-    insertMassiveUserSQL(req, res);
-    insertMassiveProductSQL(req, res);
-    insertMassiveFollowerSQL(req, res);
-    insertMassiveOwnSQL(req, res);
+    insertMassiveSQL(req, res);
 });
 
 router.post("/insert-massive-neo4j", (req, res) => {
