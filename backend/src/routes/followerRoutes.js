@@ -10,18 +10,18 @@ router.post("/followers/products", (req, res) => {
 
     // Vérifie si un productId est présent
     if (productId) {
-        if (dbType === "sql") {
+        if (dbType === "pgsql") {
             getFollowersProductsForSpecificProductSQL(userId, depth, productId, res);  // Appelle la fonction pour SQL
-        } else if (dbType === "nosql") {
+        } else if (dbType === "neo4j") {
             getFollowersProductsForSpecificProductNeo4j(userId, depth, productId, res);  // Appelle la fonction pour Neo4j
         } else {
             res.status(400).send("Base de données non spécifiée");
         }
     } else {
         // Si aucun productId n'est présent, appelle les fonctions classiques
-        if (dbType === "sql") {
+        if (dbType === "pgsql") {
             getFollowersProductsSQL(userId, depth, res);
-        } else if (dbType === "nosql") {
+        } else if (dbType === "neo4j") {
             getFollowersProductsNeo4j(userId, depth, res);
         } else {
             res.status(400).send("Base de données non spécifiée");

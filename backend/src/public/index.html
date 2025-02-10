@@ -5,17 +5,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Analyse de comportement d'achat</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="styles/main.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <body>
+
     <div id="app">
-        <h1>Choisir la base de données</h1>
+        <h1>Analyse de comportement d'achat</h1>
+
         <!-- Sélection de la base de données -->
         <div class="db-selection">
             <label for="db">Choisir une base de données :</label>
-            <select id="db" name="db" onchange="updateFormFields()">
+            <select id="db" name="db">
                 <option value="pgsql" selected>PostgreSQL</option>
                 <option value="neo4j">Neo4j</option>
             </select>
@@ -24,7 +26,7 @@
         <!-- Sélection du type d'action -->
         <div class="action-selection">
             <label for="action">Choisir une action :</label>
-            <select id="action" name="action" onchange="toggleQuantityField()">
+            <select id="action">
                 <option value="init">Initialiser</option>
                 <option value="insert-user">Insérer Utilisateur</option>
                 <option value="insert-product">Insérer Produit</option>
@@ -34,79 +36,73 @@
             </select>
         </div>
 
-        <!-- Saisie du nombre pour insert-user et insert-product -->
-        <div class="quantity-input" id="quantityUserInput" style="display:none;">
+        <!-- Champs de quantité -->
+        <div id="quantityUserInput" class="hidden">
             <label for="nbUser">Nombre d'utilisateurs :</label>
-            <input type="number" id="nbUser" name="nbUser" min="1" value="1">
+            <input type="number" id="nbUser" min="1" value="1">
         </div>
 
-        <div class="quantity-input" id="quantityProductInput" style="display:none;">
+        <div id="quantityProductInput" class="hidden">
             <label for="nbProduct">Nombre de produits :</label>
-            <input type="number" id="nbProduct" name="nbProduct" min="1" value="1">
+            <input type="number" id="nbProduct" min="1" value="1">
         </div>
 
-        <!-- Boutons pour exécuter l'action -->
-        <div class="action-buttons">
-            <button onclick="handleAction()">Exécuter l'action</button>
-            <div id="initResponse" style="color: red; font-weight: bold;"></div>
-        </div>
+        <!-- Bouton d'exécution -->
+        <button id="initButton">Exécuter l'action</button>
+        <div id="initResponse"></div>
 
-        <!-- Section des requêtes API -->
-        <div id="test">
-            <!-- Section pour la requête N°1 (followers) -->
-            <div id="followers-section">
-                <button onclick="toggleFollowersFields()">Requête N°1 (followers)</button>
-                <div id="followers-fields" class="form-fields" style="display:none;">
-                    <label for="userId">ID de l'utilisateur :</label>
-                    <input type="text" id="userId" placeholder="Entrez l'ID"><br>
-                    <label for="depth">Profondeur des followers :</label>
-                    <input type="number" id="depth" placeholder="Entrez la profondeur"><br>
-                    <button class="research-btn" onclick="followers()">Rechercher</button>
-                </div>
+        <!-- Section des requêtes -->
+        <div id="requests">
+            <button id="followersButton">Requête N°1 (followers)</button>
+            <div id="followers-fields" class="form-fields hidden">
+                <label for="userId">ID de l'utilisateur :</label>
+                <input type="text" id="userId">
+                <label for="depth">Profondeur des followers :</label>
+                <input type="number" id="depth">
+                <button id="followers-search">Rechercher</button>
             </div>
 
-            <!-- Section pour la requête N°2 (followersProducts) -->
-            <div id="followersProducts-section">
-                <button onclick="toggleFollowersProductsFields()">Requête N°2 (followersProducts)</button>
-                <div id="followersProducts-fields" class="form-fields" style="display:none;">
-                    <label for="userId-products">ID de l'utilisateur :</label>
-                    <input type="text" id="userId-products" placeholder="Entrez l'ID"><br>
-                    <label for="depth-products">Profondeur des followers :</label>
-                    <input type="number" id="depth-products" placeholder="Entrez la profondeur"><br>
-                    <label for="productId">ID du produit :</label>
-                    <input type="text" id="productId" placeholder="Entrez l'ID du produit"><br>
-                    <button class="research-btn" onclick="followersProducts()">Rechercher</button>
-                </div>
+            <button id="followersProductsButton">Requête N°2 (followersProducts)</button>
+            <div id="followersProducts-fields" class="form-fields hidden">
+                <label for="userId-products">ID de l'utilisateur :</label>
+                <input type="text" id="userId-products">
+                <label for="depth-products">Profondeur des followers :</label>
+                <input type="number" id="depth-products">
+                <label for="productId">ID du produit :</label>
+                <input type="text" id="productId">
+                <button id="followersProducts-search">Rechercher</button>
             </div>
-
-            <p id="time">Temps de réponse : </p>
-            <div id="response"></div>
         </div>
+
+        <p id="time">Temps de réponse : </p>
+        <div id="response"></div>
+
         <canvas id="requestChart" width="400" height="200"></canvas>
+
+        <!-- Tableau historique -->
         <table id="historyTable">
             <thead>
                 <tr>
                     <th>Date et Heure</th>
                     <th>Nom de la Requête</th>
                     <th>Temps de Réponse (ms)</th>
-                    <th>Type de Base</th>
+                    <th>Base de Données</th>
                     <th>Paramètres</th>
                 </tr>
             </thead>
-            <tbody>
-                <!-- Les lignes d'historique seront ajoutées ici -->
-            </tbody>
+            <tbody></tbody>
         </table>
-        <!-- Section pour afficher les paramètres -->
-        <div id="paramsModal" style="display: none;">
+
+        <!-- Modal des paramètres -->
+        <div id="paramsModal" class="hidden">
             <h3>Paramètres de la Requête</h3>
             <pre id="paramsContent"></pre>
-            <button onclick="closeParamsModal()">Fermer</button>
+            <button id="close_param">Fermer</button>
         </div>
     </div>
 
+    <script type="module" src="script/main.js"></script>
 
-    <script src="app.js"></script>
 </body>
 
 </html>

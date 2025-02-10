@@ -1,0 +1,114 @@
+/* styles/main.css */
+
+/* Réinitialisation et mise en page générale */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f4f9;
+    color: #333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#app {
+    width: 90%;
+    max-width: 1200px;
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Styles des sélections */
+select,
+input {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    margin-bottom: 10px;
+}
+
+select:focus,
+input:focus {
+    border-color: #28a745;
+    outline: none;
+}
+
+/* Boutons */
+button {
+    width: 100%;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 12px;
+    font-size: 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #218838;
+}
+
+.research-btn {
+    background-color: #007BFF;
+}
+
+.research-btn:hover {
+    background-color: #0056b3;
+}
+
+/* Sections */
+.db-selection,
+.action-selection,
+.form-fields {
+    margin-bottom: 20px;
+}
+
+.hidden {
+    display: none;
+}
+
+/* Tableau historique */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+thead {
+    background-color: #28a745;
+    color: white;
+}
+
+th,
+td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: center;
+}
+
+/* Graphique */
+canvas {
+    width: 100% !important;
+    height: auto !important;
+    margin-top: 20px;
+}
