@@ -54,44 +54,77 @@ const runSetupNoSQL = async (req, res) => {
 //////////////////////////////////
 
 // Fonction d'insertion massive
-const insertMassiveSQL = async (req, res) => {
+const insertMassiveNoSQL = async (req, res) => {
     const { nbUser, nbProduct } = req.body;  // Nombre d'utilisateurs et de produits à insérer
     console.log("Début de l'insertion massive des données...");
 
     const session = driver.session();
+    const startTime = performance.now();
 
+    // Démarrer la transaction
+    const tx = session.beginTransaction();
     try {
-        // Démarrer la transaction
-        const tx = session.beginTransaction();
-
-        const startTime = performance.now();
         await insertUser(nbUser, tx);
-        await insertProduct(nbProduct, tx);
-        await insertFollower(tx);
-        await insertOwn(tx);
-        const endTime = performance.now();
-        const executionTime = (endTime - startTime).toFixed(2);
-
-        // Valider la transaction
         await tx.commit();
-        console.log("Insertion massive terminée !");
-        res.json({
-            response: "Données insérées avec succès dans Neo4j",
-            response_time: executionTime
-        })
     } catch (error) {
-        // Annuler la transaction en cas d'erreur
         console.error("Erreur lors de l'insertion massive :", error);
-        await session.rollback();
+        await tx.rollback();
         res.status(500).json({
             response: "Erreur lors de l'insertion massive",
             response_time: 0
         });
-    } finally {
-        // Fermer la session Neo4j
-        await session.close();
     }
+
+    const tx1 = session.beginTransaction();
+    try {
+        await insertProduct(nbProduct, tx1);
+        await tx1.commit();
+    } catch (error) {
+        console.error("Erreur lors de l'insertion massive :", error);
+        await tx1.rollback();
+        res.status(500).json({
+            response: "Erreur lors de l'insertion massive",
+            response_time: 0
+        });
+    }
+
+    const tx2 = session.beginTransaction();
+    try {
+        await insertFollower(tx2);
+        await tx2.commit();
+    } catch (error) {
+        console.error("Erreur lors de l'insertion massive :", error);
+        await tx2.rollback();
+        res.status(500).json({
+            response: "Erreur lors de l'insertion massive",
+            response_time: 0
+        });
+    }
+
+    const tx3 = session.beginTransaction();
+    try {
+        await insertOwn(tx3);
+        await tx3.commit();
+    } catch (error) {
+        console.error("Erreur lors de l'insertion massive :", error);
+        await tx3.rollback();
+        res.status(500).json({
+            response: "Erreur lors de l'insertion massive",
+            response_time: 0
+        });
+    }
+
+    const endTime = performance.now();
+    const executionTime = (endTime - startTime).toFixed(2);
+
+    res.json({
+        response: "Données insérées avec succès dans Neo4j",
+        response_time: executionTime
+    });
+
+    await session.close();
 }
+
 // Fonction d'insertion massive pour les utilisateurs
 const insertMassiveUserNoSQL = async (req, res) => {
     const { nbUser } = req.body;  // Nombre d'utilisateurs à insérer
@@ -99,10 +132,9 @@ const insertMassiveUserNoSQL = async (req, res) => {
 
     const session = driver.session();
 
+    // Démarrer la transaction
+    const tx = session.beginTransaction();
     try {
-        // Démarrer la transaction
-        const tx = session.beginTransaction();
-
         // Insérer les utilisateurs
         const startTime = performance.now();
         await insertUser(nbUser, tx);  // Passer la transaction à la fonction d'insertion
@@ -120,7 +152,7 @@ const insertMassiveUserNoSQL = async (req, res) => {
     } catch (error) {
         // Annuler la transaction en cas d'erreur
         console.error("Erreur lors de l'insertion des utilisateurs :", error);
-        await session.rollback();
+        await tx.rollback();
         res.status(500).json({
             response: "Erreur lors de l'insertion des utilisateurs",
             response_time: 0
@@ -138,10 +170,9 @@ const insertMassiveProductNoSQL = async (req, res) => {
 
     const session = driver.session();
 
+    // Démarrer la transaction
+    const tx = session.beginTransaction();
     try {
-        // Démarrer la transaction
-        const tx = session.beginTransaction();
-
         // Insérer les produits
         const startTime = performance.now();
         await insertProduct(nbProduct, tx);  // Passer la transaction à la fonction d'insertion
@@ -159,7 +190,7 @@ const insertMassiveProductNoSQL = async (req, res) => {
     } catch (error) {
         // Annuler la transaction en cas d'erreur
         console.error("Erreur lors de l'insertion des produits :", error);
-        await session.rollback();
+        await tx.rollback();
         res.status(500).json({
             response: "Erreur lors de l'insertion des produits",
             response_time: 0
@@ -176,10 +207,9 @@ const insertMassiveFollowerNoSQL = async (req, res) => {
 
     const session = driver.session();
 
+    // Démarrer la transaction
+    const tx = session.beginTransaction();
     try {
-        // Démarrer la transaction
-        const tx = session.beginTransaction();
-
         // Insérer les followers
         const startTime = performance.now();
         await insertFollower(tx);  // Passer la transaction à la fonction d'insertion
@@ -197,7 +227,7 @@ const insertMassiveFollowerNoSQL = async (req, res) => {
     } catch (error) {
         // Annuler la transaction en cas d'erreur
         console.error("Erreur lors de l'insertion des followers :", error);
-        await session.rollback();
+        await tx.rollback();
         res.status(500).json({
             error: "Erreur lors de l'insertion des followers",
             response_time: 0
@@ -214,10 +244,9 @@ const insertMassiveOwnNoSQL = async (req, res) => {
 
     const session = driver.session();
 
+    // Démarrer la transaction
+    const tx = session.beginTransaction();
     try {
-        // Démarrer la transaction
-        const tx = session.beginTransaction();
-
         // Insérer les achats
         const startTime = performance.now();
         await insertOwn(tx);  // Passer la transaction à la fonction d'insertion
@@ -235,7 +264,7 @@ const insertMassiveOwnNoSQL = async (req, res) => {
     } catch (error) {
         // Annuler la transaction en cas d'erreur
         console.error("Erreur lors de l'insertion des achats :", error);
-        await session.rollback();
+        await tx.rollback();
         res.status(500).json({
             response: "Erreur lors de l'insertion des achats",
             response_time: 0
@@ -379,4 +408,4 @@ const insertOwn = async (tx) => {
 };
 
 
-module.exports = { runSetupNoSQL, insertMassiveUserNoSQL, insertMassiveProductNoSQL, insertMassiveFollowerNoSQL, insertMassiveOwnNoSQL };
+module.exports = { runSetupNoSQL, insertMassiveUserNoSQL, insertMassiveProductNoSQL, insertMassiveFollowerNoSQL, insertMassiveOwnNoSQL, insertMassiveNoSQL };
