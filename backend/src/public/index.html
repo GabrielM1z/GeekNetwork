@@ -22,34 +22,35 @@
                 <option value="neo4j">Neo4j</option>
             </select>
         </div>
+        <button id="InitButton">Initialisation</button>
+        <div id="Initialiser" class="hidden">
+            <!-- Sélection du type d'action -->
+            <div class="action-selection">
+                <label for="action">Choisir une action :</label>
+                <select id="action">
+                    <option value="init">Initialiser</option>
+                    <option value="insert-user">Insérer Utilisateur</option>
+                    <option value="insert-product">Insérer Produit</option>
+                    <option value="insert-follower">Insérer Follower</option>
+                    <option value="insert-own">Insérer Propriétaire</option>
+                    <option value="insert-massive">Insérer Massivement</option>
+                </select>
+            </div>
 
-        <!-- Sélection du type d'action -->
-        <div class="action-selection">
-            <label for="action">Choisir une action :</label>
-            <select id="action">
-                <option value="init">Initialiser</option>
-                <option value="insert-user">Insérer Utilisateur</option>
-                <option value="insert-product">Insérer Produit</option>
-                <option value="insert-follower">Insérer Follower</option>
-                <option value="insert-own">Insérer Propriétaire</option>
-                <option value="insert-massive">Insérer Massivement</option>
-            </select>
+            <!-- Champs de quantité -->
+            <div id="quantityUserInput" class="hidden">
+                <label for="nbUser">Nombre d'utilisateurs :</label>
+                <input type="number" id="nbUser" min="1" value="1">
+            </div>
+
+            <div id="quantityProductInput" class="hidden">
+                <label for="nbProduct">Nombre de produits :</label>
+                <input type="number" id="nbProduct" min="1" value="1">
+            </div>
+
+            <!-- Bouton d'exécution -->
+            <button id="initButton">Exécuter l'action</button>
         </div>
-
-        <!-- Champs de quantité -->
-        <div id="quantityUserInput" class="hidden">
-            <label for="nbUser">Nombre d'utilisateurs :</label>
-            <input type="number" id="nbUser" min="1" value="1">
-        </div>
-
-        <div id="quantityProductInput" class="hidden">
-            <label for="nbProduct">Nombre de produits :</label>
-            <input type="number" id="nbProduct" min="1" value="1">
-        </div>
-
-        <!-- Bouton d'exécution -->
-        <button id="initButton">Exécuter l'action</button>
-        <div></div>
 
         <!-- Section des requêtes -->
         <div id="requests">

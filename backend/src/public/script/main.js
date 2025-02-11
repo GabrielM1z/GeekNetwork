@@ -1,12 +1,12 @@
 //import { initSql, initNoSql, followers, followersProducts } from "./api.js";
 import { getTopElements, followers, followersProducts } from "./api.js";
-import { toggleQuantityField, toggleClassicField, toggleFollowersFields, toggleFollowersProductsFields, handleAction } from "./ui.js";
+import { toggleInitField, toggleQuantityField, toggleClassicField, toggleFollowersFields, toggleFollowersProductsFields, handleAction } from "./ui.js";
 //import { toggleQuantityField } from "../components/forms.js";
 import { closeParamsModal, addToHistory, closeData } from "../components/history.js";
 import "./charts.js";
 
 document.addEventListener("DOMContentLoaded", () => {
-
+    document.getElementById("InitButton").addEventListener("click", toggleInitField);
     document.getElementById("action").addEventListener("change", toggleQuantityField);
     document.getElementById("initButton").addEventListener("click", handleAction);
     document.getElementById("classicButton").addEventListener("click", toggleClassicField);
@@ -50,11 +50,4 @@ export function trace_requete(title, time, db, body, data) {
     } else {
         console.error("requestChart est undefined !");
     }
-    /*
-        if (data != null) {
-            document.getElementById('response-data').innerHTML = JSON.stringify(data, null, 2);
-        } else {
-            document.getElementById('response-data').innerHTML = "";
-        }
-    */
 }

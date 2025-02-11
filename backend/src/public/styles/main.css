@@ -36,7 +36,7 @@ h1 {
 .action-selection,
 #quantityUserInput,
 #quantityProductInput {
-    margin-bottom: 20px;
+    margin: 20px 0;
     padding: 15px;
     background-color: #fff;
     border-radius: 8px;

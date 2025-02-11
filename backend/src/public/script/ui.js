@@ -1,6 +1,12 @@
 import "./charts.js";
 import { trace_requete } from "./main.js";
 
+// Fonction pour afficher/masquer les requetes classiques
+export function toggleInitField() {
+    const fields = document.getElementById('Initialiser');
+    fields.style.display = (fields.style.display === 'none' || fields.style.display === '') ? 'block' : 'none';
+}
+
 // Fonction pour afficher/masquer les nombres de user et product
 export function toggleQuantityField() {
     const action = document.getElementById("action").value;
