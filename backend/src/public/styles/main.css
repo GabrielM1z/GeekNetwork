@@ -1,133 +1,290 @@
-/* styles/main.css */
-
-/* Réinitialisation et mise en page générale */
-* {
+/* Style global */
+body {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    background-color: #f4f7fb;
+    color: #333;
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
-}
-
-html,
-body {
-    width: 100%;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f4f4f9;
-    color: #333;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
 }
 
-#app {
-    width: 90%;
-    max-width: 1200px;
-    background-color: #ffffff;
-    padding: 30px;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
+/* Titre principal */
 h1 {
-    text-align: center;
-    margin-bottom: 20px;
+    font-size: 2.5em;
+    font-weight: 700;
+    color: #2c3e50;
+    margin-top: 20px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
 }
 
-/* Styles des sélections */
+/* Section principale */
+#app {
+    width: 80%;
+    max-width: 1200px;
+    margin: 20px;
+    padding: 30px;
+    background: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Conteneurs de formulaires */
+.db-selection,
+.action-selection,
+#quantityUserInput,
+#quantityProductInput {
+    margin: 20px 0;
+    padding: 15px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s ease;
+}
+
+.db-selection:hover,
+.action-selection:hover,
+#quantityUserInput:hover,
+#quantityProductInput:hover {
+    transform: translateY(-5px);
+}
+
+/* Labels et champs de formulaire */
+label {
+    font-size: 14px;
+    font-weight: 500;
+    color: #2c3e50;
+}
+
 select,
-input {
+input[type="number"],
+input[type="text"] {
     width: 100%;
     padding: 10px;
+    margin-top: 5px;
+    border-radius: 6px;
+    border: 1px solid #ddd;
     font-size: 16px;
-    border-radius: 8px;
-    border: 1px solid #ccc;
-    margin-bottom: 10px;
+    background-color: #f9f9f9;
+    transition: border-color 0.3s ease;
 }
+
+input[type="number"] {
+    width: calc(100% - 15px);
+}
+
 
 select:focus,
-input:focus {
-    border-color: #28a745;
+input[type="number"]:focus,
+input[type="text"]:focus {
+    border-color: #3498db;
     outline: none;
+    background-color: #ffffff;
 }
 
-/* Boutons */
+/* Boutons principaux */
 button {
-    width: 100%;
-    background-color: #28a745;
-    color: white;
+    background-color: #3498db;
+    color: #fff;
     border: none;
-    padding: 12px;
+    padding: 12px 18px;
     font-size: 16px;
-    border-radius: 8px;
+    font-weight: 600;
+    border-radius: 50px;
     cursor: pointer;
-    margin-top: 10px;
-    transition: background-color 0.3s;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    margin-top: 15px;
 }
 
 button:hover {
-    background-color: #218838;
+    background-color: #2980b9;
+    transform: translateY(-3px);
 }
 
-.research-btn {
-    background-color: #007BFF;
+button:active {
+    background-color: #21618c;
+    transform: translateY(1px);
 }
 
-.research-btn:hover {
-    background-color: #0056b3;
+/* Boutons de recherche */
+button#classic-search,
+button#followers-search,
+button#followersProducts-search {
+    background-color: #27ae60;
+    margin-top: 10px;
 }
 
-/* Sections */
-.db-selection,
-.action-selection,
-.form-fields {
-    margin-bottom: 20px;
+button#classic-search:hover,
+button#followers-search:hover,
+button#followersProducts-search:hover {
+    background-color: #2ecc71;
 }
 
+button#classic-search:active,
+button#followers-search:active,
+button#followersProducts-search:active {
+    background-color: #1abc9c;
+}
+
+/* Cacher les champs de formulaire non nécessaires */
 .hidden {
     display: none;
 }
 
-/* Tableau historique */
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-}
-
-thead {
-    background-color: #28a745;
-    color: white;
-}
-
-th,
-td {
-    border: 1px solid #ddd;
-    padding: 10px;
+/* Section des résultats */
+#return {
+    margin-top: 30px;
+    padding: 25px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
     text-align: center;
-}
-
-/* Graphique */
-canvas {
-    width: 100% !important;
-    height: auto !important;
-    margin-top: 20px;
+    width: 80%;
 }
 
 #time {
-    display: none;
-    font-size: 18px;
+    font-size: 1.2em;
+    color: #2c3e50;
+    margin-bottom: 10px;
     font-weight: bold;
-    color: #d9534f;
-    /* Rouge pour attirer l'attention */
-    background-color: #f8d7da;
-    /* Fond légèrement rosé */
-    padding: 10px;
-    border-radius: 5px;
-    text-align: center;
-    margin-top: 20px;
-    border: 1px solid #d9534f;
 }
 
-/* Lorsque l'élément doit être affiché */
-#time.visible {
-    display: inline-block;
+#response {
+    font-size: 1.1em;
+    color: #27ae60;
+    /* Vert pour les données */
+    font-weight: 500;
+}
+
+/* Tableau historique */
+#historyTable {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 30px;
+}
+
+#historyTable th,
+#historyTable td {
+    padding: 15px;
+    text-align: center;
+    font-size: 14px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+#historyTable th {
+    background-color: #3498db;
+    color: #fff;
+    font-weight: bold;
+}
+
+#historyTable tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+#historyTable tr:hover {
+    background-color: #ecf0f1;
+}
+
+/* Modal des paramètres */
+/* Style global des modals */
+#paramsModal,
+#datasModal {
+    display: none;
+    background-color: rgba(0, 0, 0, 0.7);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+}
+
+/* Contenu du modal */
+.modal-content {
+    color: #f4f4f4;
+    background-color: #2c3e50;
+    padding: 25px;
+    border-radius: 8px;
+    font-size: 16px;
+    white-space: pre-wrap;
+    max-height: 100%;
+    overflow-y: auto;
+    width: 90%;
+    max-width: 700px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    animation: fadeIn 0.5s ease-out;
+    margin: 0 auto;
+}
+
+/* Titre du modal */
+.modal-content h3 {
+    font-size: 1.6em;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 15px;
+}
+
+/* Contenu du modal (texte) */
+#paramsContent,
+#dataContent {
+    font-size: 1.2em;
+    color: #f4f4f4;
+    margin-bottom: 20px;
+}
+
+/* Boutons de fermeture */
+button#close_param,
+button#close_data {
+    background-color: #e74c3c;
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button#close_param:hover,
+button#close_data:hover {
+    background-color: #c0392b;
+}
+
+button#close_param:active,
+button#close_data:active {
+    background-color: #e74c3c;
+}
+
+/* Animation des transitions */
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+
+
+
+/* Animations des transitions */
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+#app {
+    animation: fadeIn 1s ease-out;
 }

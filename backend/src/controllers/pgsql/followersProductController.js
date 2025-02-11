@@ -37,8 +37,9 @@ const getFollowersProductsForSpecificProductSQL = (userId, depth, productId, res
             const executionTime = (endTime - startTime).toFixed(2);
 
             res.json({
-                products: result.rows,
+                response: "Requête n°2 SQL exécutée avec succès.",
                 response_time: executionTime,
+                data: result.rows
             });
         })
         .catch(err => {
