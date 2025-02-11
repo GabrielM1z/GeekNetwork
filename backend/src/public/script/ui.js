@@ -8,6 +8,12 @@ export function toggleQuantityField() {
     document.getElementById("quantityProductInput").classList.toggle("hidden", action !== 'insert-product' && action !== 'insert-massive');
 }
 
+// Fonction pour afficher/masquer les requetes classiques
+export function toggleClassicField() {
+    const fields = document.getElementById('classic-fields');
+    fields.style.display = (fields.style.display === 'none' || fields.style.display === '') ? 'block' : 'none';
+}
+
 // Fonction pour afficher/masquer les champs de la requête followers
 export function toggleFollowersFields() {
     const fields = document.getElementById('followers-fields');
@@ -24,7 +30,6 @@ export function toggleFollowersProductsFields() {
 export async function handleAction() {
     const db = document.getElementById("db").value;
     const action = document.getElementById("action").value;
-    console.log("é", action)
     const nbUser = document.getElementById("nbUser").value;
     const nbProduct = document.getElementById("nbProduct").value;
     let time = 0
@@ -87,11 +92,11 @@ export async function handleAction() {
     })
         .then(response => response.json())
         .then(data => {
-            document.getElementById("initResponse").innerText = 'Opération réussie : ' + data.response;
+            document.getElementById("response").innerText = '✅ Opération réussie : ' + data.response;
             time = data.response_time
         })
         .catch(error => {
-            document.getElementById("initResponse").innerText = 'Erreur : ' + error.response;
+            document.getElementById("response").innerText = '❌ Erreur : ' + error.response;
         });
-    trace_requete(action, time, db, body)
+    trace_requete(action, time, db, body, null)
 }

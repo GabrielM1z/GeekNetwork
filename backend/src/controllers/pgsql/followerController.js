@@ -35,8 +35,9 @@ const getFollowersProductsSQL = (userId, depth, res) => {
             const endTime = performance.now();
             const executionTime = (endTime - startTime).toFixed(2);
             res.json({
-                products: result.rows,
-                response_time: executionTime
+                response: "Requête n°1 SQL exécutée avec succès.",
+                response_time: executionTime,
+                data: result.rows
             });
         })
         .catch(err => {

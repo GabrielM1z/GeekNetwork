@@ -1,23 +1,26 @@
 //import { initSql, initNoSql, followers, followersProducts } from "./api.js";
-import { followers, followersProducts } from "./api.js";
-import { toggleFollowersFields, toggleFollowersProductsFields, handleAction } from "./ui.js";
-import { toggleQuantityField } from "../components/forms.js";
-import { closeParamsModal, addToHistory } from "../components/history.js";
+import { getTopElements, followers, followersProducts } from "./api.js";
+import { toggleQuantityField, toggleClassicField, toggleFollowersFields, toggleFollowersProductsFields, handleAction } from "./ui.js";
+//import { toggleQuantityField } from "../components/forms.js";
+import { closeParamsModal, addToHistory, closeData } from "../components/history.js";
 import "./charts.js";
 
 document.addEventListener("DOMContentLoaded", () => {
 
     document.getElementById("action").addEventListener("change", toggleQuantityField);
     document.getElementById("initButton").addEventListener("click", handleAction);
+    document.getElementById("classicButton").addEventListener("click", toggleClassicField);
     document.getElementById("followersButton").addEventListener("click", toggleFollowersFields);
     document.getElementById("followersProductsButton").addEventListener("click", toggleFollowersProductsFields);
+    document.getElementById("classic-search").addEventListener("click", getTopElements);
     document.getElementById("followers-search").addEventListener("click", followers);
     document.getElementById("followersProducts-search").addEventListener("click", followersProducts);
     document.getElementById("close_param").addEventListener("click", closeParamsModal);
+    document.getElementById("close_data").addEventListener("click", closeData);
 });
 
 // Sélectionne l'élément #time
-const timeElement = document.getElementById('time');
+const timeElement = document.getElementById('return');
 
 // Crée un observateur pour détecter les changements dans le contenu de #time
 const observer = new MutationObserver(function (mutationsList, observer) {
@@ -33,10 +36,9 @@ observer.observe(timeElement, {
 });
 
 
-export function trace_requete(title, time, db, body) {
-    console.log("ac", title)
+export function trace_requete(title, time, db, body, data) {
     document.getElementById('time').innerText = `Temps de réponse : ${time} ms`;
-    addToHistory(title, time, db, body)
+    addToHistory(title, time, db, body, data)
 
     // Mettre à jour le graphique avec le temps de la requête
     if (window.requestChart) { // <-- Utilise `window.requestChart`
@@ -48,4 +50,11 @@ export function trace_requete(title, time, db, body) {
     } else {
         console.error("requestChart est undefined !");
     }
+    /*
+        if (data != null) {
+            document.getElementById('response-data').innerHTML = JSON.stringify(data, null, 2);
+        } else {
+            document.getElementById('response-data').innerHTML = "";
+        }
+    */
 }

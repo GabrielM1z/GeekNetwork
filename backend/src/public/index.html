@@ -49,10 +49,41 @@
 
         <!-- Bouton d'exécution -->
         <button id="initButton">Exécuter l'action</button>
-        <div id="initResponse"></div>
+        <div></div>
 
         <!-- Section des requêtes -->
         <div id="requests">
+            <button id="classicButton">Requête N°0 (followers)</button>
+            <div id="classic-fields" class="form-fields hidden">
+                <label for="table">Choisir le type de requête :</label>
+                <select id="table" name="table">
+                    <option value="User">Utilisateur</option>
+                    <option value="Product">Produit</option>
+                    <option value="Follow">Follower</option>
+                    <option value="Own">Propriétaire</option>
+                </select>
+                <label for="nbLimit">Nombre d'éléments à récupérer :</label>
+                <input type="number" id="limit" min="1" value="10">
+                <button id="classic-search">Rechercher</button>
+                <div>
+                    <p><strong>Requête pour les utilisateurs (User) :</strong></p>
+                    <p>Cette requête récupère les N premiers utilisateurs dans la table "User" et affiche leur ID,
+                        prénom et nom.</p>
+
+                    <p><strong>Requête pour les produits (Product) :</strong></p>
+                    <p>Cette requête récupère les N premiers produits dans la table "Product" et affiche leur ID, nom et
+                        prix.</p>
+
+                    <p><strong>Requête pour les éléments "Own" :</strong></p>
+                    <p>Cette requête récupère les N premières lignes de la table "Own", associant un utilisateur (avec
+                        son prénom et nom) à un produit (avec son nom). </p>
+
+                    <p><strong>Requête pour les abonnements (Follow) :</strong></p>
+                    <p>Cette requête récupère les N premiers abonnements dans la table "Follow", en affichant le prénom
+                        et le nom de l'utilisateur ainsi que l'ID de l'abonné.</p>
+                </div>
+
+            </div>
             <button id="followersButton">Requête N°1 (followers)</button>
             <div id="followers-fields" class="form-fields hidden">
                 <label for="userId">ID de l'utilisateur :</label>
@@ -74,8 +105,10 @@
             </div>
         </div>
         <br>
-        <p id="time">Temps de réponse...</p>
-        <div id="response"></div>
+        <div id="return">
+            <p id="time">Temps de réponse...</p>
+            <div id="response"></div>
+        </div>
 
         <canvas id="requestChart" width="400" height="200"></canvas>
 
@@ -95,14 +128,26 @@
 
         <!-- Modal des paramètres -->
         <div id="paramsModal" class="hidden">
-            <h3>Paramètres de la Requête</h3>
-            <pre id="paramsContent"></pre>
-            <button id="close_param">Fermer</button>
+            <div class="modal-content">
+                <h3>Paramètres de la Requête</h3>
+                <pre id="paramsContent"></pre>
+                <button id="close_param">Fermer</button>
+            </div>
         </div>
+
+        <!-- Modal des données -->
+        <div id="datasModal" class="hidden">
+            <div class="modal-content">
+                <h3>Données de la Requête</h3>
+                <button id="close_data">Fermer</button>
+                <div id="dataContent"></div>
+            </div>
+        </div>
+
+
+
     </div>
-
     <script type="module" src="script/main.js"></script>
-
 </body>
 
 </html>
