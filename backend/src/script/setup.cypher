@@ -32,16 +32,16 @@ CREATE (:Product {id: "110", name: "Enceinte Connectée", price: 149.99});
 //////////////////////////////////////////
 // Création des relations OWN (possession de produits)
 //////////////////////////////////////////
-MATCH (u1:User {id: "1"}), (p1:Product {id: "101"}) CREATE (u1)-[:OWN]->(p1);
-MATCH (u2:User {id: "2"}), (p2:Product {id: "102"}) CREATE (u2)-[:OWN]->(p2);
-MATCH (u3:User {id: "3"}), (p3:Product {id: "103"}) CREATE (u3)-[:OWN]->(p3);
-MATCH (u4:User {id: "4"}), (p4:Product {id: "104"}) CREATE (u4)-[:OWN]->(p4);
-MATCH (u5:User {id: "5"}), (p5:Product {id: "105"}) CREATE (u5)-[:OWN]->(p5);
-MATCH (u6:User {id: "6"}), (p6:Product {id: "106"}) CREATE (u6)-[:OWN]->(p6);
-MATCH (u7:User {id: "7"}), (p7:Product {id: "107"}) CREATE (u7)-[:OWN]->(p7);
-MATCH (u8:User {id: "8"}), (p8:Product {id: "108"}) CREATE (u8)-[:OWN]->(p8);
-MATCH (u9:User {id: "9"}), (p9:Product {id: "109"}) CREATE (u9)-[:OWN]->(p9);
-MATCH (u10:User {id: "10"}), (p10:Product {id: "110"}) CREATE (u10)-[:OWN]->(p10);
+MATCH (u1:User {id: "1"}), (p1:Product {id: "101"}) CREATE (u1)-[:OWNS]->(p1);
+MATCH (u2:User {id: "2"}), (p2:Product {id: "102"}) CREATE (u2)-[:OWNS]->(p2);
+MATCH (u3:User {id: "3"}), (p3:Product {id: "103"}) CREATE (u3)-[:OWNS]->(p3);
+MATCH (u4:User {id: "4"}), (p4:Product {id: "104"}) CREATE (u4)-[:OWNS]->(p4);
+MATCH (u5:User {id: "5"}), (p5:Product {id: "105"}) CREATE (u5)-[:OWNS]->(p5);
+MATCH (u6:User {id: "6"}), (p6:Product {id: "106"}) CREATE (u6)-[:OWNS]->(p6);
+MATCH (u7:User {id: "7"}), (p7:Product {id: "107"}) CREATE (u7)-[:OWNS]->(p7);
+MATCH (u8:User {id: "8"}), (p8:Product {id: "108"}) CREATE (u8)-[:OWNS]->(p8);
+MATCH (u9:User {id: "9"}), (p9:Product {id: "109"}) CREATE (u9)-[:OWNS]->(p9);
+MATCH (u10:User {id: "10"}), (p10:Product {id: "110"}) CREATE (u10)-[:OWNS]->(p10);
 
 //////////////////////////////////////////
 // Création des relations FOLLOW (utilisateurs qui suivent d'autres utilisateurs)
