@@ -4,16 +4,16 @@ MATCH (n) DETACH DELETE n;
 //////////////////////////////////////////
 // Création des utilisateurs
 //////////////////////////////////////////
-CREATE (:User {id: "1", firstname: "Alice", lastname: "Martin"});
-CREATE (:User {id: "2", firstname: "Bob", lastname: "Dupont"});
-CREATE (:User {id: "3", firstname: "Charlie", lastname: "Lemoine"});
-CREATE (:User {id: "4", firstname: "David", lastname: "Cohen"});
-CREATE (:User {id: "5", firstname: "Emma", lastname: "Bernard"});
-CREATE (:User {id: "6", firstname: "Fanny", lastname: "Morel"});
-CREATE (:User {id: "7", firstname: "Georges", lastname: "Dubois"});
-CREATE (:User {id: "8", firstname: "Hugo", lastname: "Lefevre"});
-CREATE (:User {id: "9", firstname: "Isabelle", lastname: "Garcia"});
-CREATE (:User {id: "10", firstname: "Jules", lastname: "Roux"});
+CREATE (:User {id: "1", firstName: "Alice", lastName: "Martin"});
+CREATE (:User {id: "2", firstName: "Bob", lastName: "Dupont"});
+CREATE (:User {id: "3", firstName: "Charlie", lastName: "Lemoine"});
+CREATE (:User {id: "4", firstName: "David", lastName: "Cohen"});
+CREATE (:User {id: "5", firstName: "Emma", lastName: "Bernard"});
+CREATE (:User {id: "6", firstName: "Fanny", lastName: "Morel"});
+CREATE (:User {id: "7", firstName: "Georges", lastName: "Dubois"});
+CREATE (:User {id: "8", firstName: "Hugo", lastName: "Lefevre"});
+CREATE (:User {id: "9", firstName: "Isabelle", lastName: "Garcia"});
+CREATE (:User {id: "10", firstName: "Jules", lastName: "Roux"});
 
 //////////////////////////////////////////
 // Création des produits

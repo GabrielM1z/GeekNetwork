@@ -9,7 +9,7 @@ const getTopElementsNeo4j = (table, limit, res) => {
     let query = '';
     switch (table) {
         case 'User':
-            query = `MATCH (u:User) RETURN u.id AS id, u.firstname AS firstname, u.lastname AS lastname LIMIT ${limit}`;
+            query = `MATCH (u:User) RETURN u.id AS id, u.firstName AS firstName, u.lastName AS lastName LIMIT ${limit}`;
             break;
         case 'Product':
             query = `MATCH (p:Product) RETURN p.id AS id, p.name AS name, p.price AS price LIMIT ${limit}`;
@@ -17,14 +17,14 @@ const getTopElementsNeo4j = (table, limit, res) => {
         case 'Own':
             query = `
                 MATCH (u:User)-[:OWN]->(p:Product)
-                RETURN u.firstname AS firstname, u.lastname AS lastname, p.name AS productName, u.id AS id_user, p.id AS id_product
+                RETURN u.firstName AS firstName, u.lastName AS lastName, p.name AS productName, u.id AS id_user, p.id AS id_product
                 LIMIT ${limit}
             `;
             break;
         case 'Follow':
             query = `
                 MATCH (u:User)-[:FOLLOWS]->(f:User)
-                RETURN u.firstname AS firstname, u.lastname AS lastname, f.id AS id_follower
+                RETURN u.firstName AS firstName, u.lastName AS lastName, f.id AS id_follower
                 LIMIT ${limit}
             `;
             break;
@@ -38,7 +38,7 @@ const getTopElementsNeo4j = (table, limit, res) => {
             const endTime = performance.now();
             const executionTime = (endTime - startTime).toFixed(2);
             res.json({
-                response: "Requête n°0 Cypher exécutée avec succès.",
+                response: "Requête Cypher exécutée avec succès.",
                 response_time: executionTime,
                 data: result.records.map(record => record.toObject())
             });
