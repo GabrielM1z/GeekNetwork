@@ -12,7 +12,7 @@ window.requestChart = new Chart(ctx, {
     data: {
         labels: [],
         datasets: [{
-            label: 'Temps de requête (ms)',
+            label: 'Temps de requête (s)',
             data: [],
             borderColor: 'rgba(75, 192, 192, 1)',
             backgroundColor: 'rgba(75, 192, 192, 0.2)',
@@ -29,7 +29,7 @@ window.requestChart = new Chart(ctx, {
                         return `Requête #${index + 1} - ${action}`; // Affiche dans le titre
                     },
                     label: function (tooltipItem) {
-                        return `Temps: ${tooltipItem.raw} ms`;
+                        return `Temps: ${tooltipItem.raw} s`;
                     }
                 }
             }
@@ -41,7 +41,7 @@ window.requestChart = new Chart(ctx, {
                 title: { display: true, text: 'Numéro de requête' }
             },
             y: {
-                title: { display: true, text: 'Temps (ms)' },
+                title: { display: true, text: 'Temps (s)' },
                 min: 0,
             }
         }

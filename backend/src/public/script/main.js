@@ -37,7 +37,10 @@ observer.observe(timeElement, {
 
 
 export function trace_requete(title, time, db, body, data) {
-    document.getElementById('time').innerText = `Temps de réponse : ${time} ms`;
+    time = time / 1000;
+    time = time.toFixed(3);
+
+    document.getElementById('time').innerText = `Temps de réponse : ${time} s`;
     addToHistory(title, time, db, body, data)
 
     // Mettre à jour le graphique avec le temps de la requête
