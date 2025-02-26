@@ -1,6 +1,6 @@
 //import { initSql, initNoSql, followers, followersProducts } from "./api.js";
 import { getTopElements, followers, followersProducts } from "./api.js";
-import { toggleInitField, toggleQuantityField, toggleClassicField, toggleFollowersFields, toggleFollowersProductsFields, handleAction } from "./ui.js";
+import { toggleInitField, toggleQuantityField, toggleClassicField, toggleFollowersFields, toggleFollowersProductsFields, handleAction, tableChange } from "./ui.js";
 //import { toggleQuantityField } from "../components/forms.js";
 import { closeParamsModal, addToHistory, closeData } from "../components/history.js";
 import "./charts.js";
@@ -17,6 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("followersProducts-search").addEventListener("click", followersProducts);
     document.getElementById("close_param").addEventListener("click", closeParamsModal);
     document.getElementById("close_data").addEventListener("click", closeData);
+    document.getElementById("table").addEventListener("change", tableChange);
 });
 
 // Sélectionne l'élément #time

@@ -28,6 +28,9 @@ const getTopElementsNeo4j = (table, limit, res) => {
                 LIMIT ${limit}
             `;
             break;
+        case 'Count':
+            query = 'MATCH (u:User) RETURN COUNT(u) AS total_users';
+            break;
         default:
             return res.status(400).send("Table non valide");
     }

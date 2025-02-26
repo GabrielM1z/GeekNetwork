@@ -62,8 +62,9 @@
                     <option value="Product">Produit</option>
                     <option value="Follow">Follower</option>
                     <option value="Own">Propriétaire</option>
+                    <option value="Count">Nombre d'utilisateurs</option>
                 </select>
-                <label for="nbLimit">Nombre d'éléments à récupérer :</label>
+                <label for="nbLimit" id="limitLabel">Nombre d'éléments à récupérer :</label>
                 <input type="number" id="limit" min="1" value="10">
                 <button id="classic-search">Rechercher</button>
                 <div>
@@ -77,11 +78,14 @@
 
                     <p><strong>Requête pour les éléments "Own" :</strong></p>
                     <p>Cette requête récupère les N premières lignes de la table "Own", associant un utilisateur (avec
-                        son prénom et nom) à un produit (avec son nom). </p>
+                        son prénom et nom) à un produit (avec son nom).</p>
 
                     <p><strong>Requête pour les abonnements (Follow) :</strong></p>
                     <p>Cette requête récupère les N premiers abonnements dans la table "Follow", en affichant le prénom
                         et le nom de l'utilisateur ainsi que l'ID de l'abonné.</p>
+
+                    <p><strong>Requête pour le nombre total d'utilisateurs (Count) :</strong></p>
+                    <p>Cette requête compte le nombre total d'utilisateurs dans la table "User".</p>
                 </div>
 
             </div>

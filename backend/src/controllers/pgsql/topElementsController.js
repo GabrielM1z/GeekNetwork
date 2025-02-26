@@ -39,6 +39,10 @@ const getTopElementsSQL = (table, limit, res) => {
 
             values = [limit];
             break;
+        case 'Count':
+            query = 'SELECT COUNT(*) AS total_users FROM "User"';
+            values = [];
+            break;
         default:
             return res.status(400).send("Table non valide");
     }

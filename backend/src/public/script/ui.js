@@ -106,3 +106,17 @@ export async function handleAction() {
         });
     trace_requete(action, time, db, body, null)
 }
+
+export function tableChange() {
+    const selectedValue = document.getElementById("table").value;
+    const limitLabel = document.getElementById("limitLabel");
+    const limitInput = document.getElementById("limit");
+
+    if (selectedValue === "Count") {
+        limitLabel.style.display = "none";
+        limitInput.style.display = "none";
+    } else {
+        limitLabel.style.display = "inline";
+        limitInput.style.display = "inline";
+    }
+}
