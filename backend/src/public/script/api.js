@@ -7,6 +7,7 @@ export function getTopElements() {
     const limit = document.getElementById('limit').value;  // Nombre N d'éléments à récupérer
     const params = { table, limit, dbType };
     console.log("param=", params)
+    document.getElementById('loading-overlay').style.display = 'block';
     fetch('/api/top-elements', {
         method: 'POST',
         headers: {
@@ -20,10 +21,12 @@ export function getTopElements() {
     })
         .then(response => response.json())
         .then(data => {
+            document.getElementById('loading-overlay').style.display = 'none';
             document.getElementById("response").innerText = '✅ Opération réussie : ' + data.response;
             trace_requete("Requete n°0", data.response_time, dbType, params, data.data)
         })
         .catch(err => {
+            document.getElementById('loading-overlay').style.display = 'none';
             document.getElementById('response').innerText = '❌ Erreur lors de la requête';
             console.error(err);
         });
@@ -36,6 +39,8 @@ export function followers() {
     const userId = document.getElementById('userId').value;
     const depth = document.getElementById('depth').value;
     const params = { userId, depth, dbType };
+
+    document.getElementById('loading-overlay').style.display = 'block';
 
     fetch('/api/followers/products', {
         method: 'POST',
@@ -50,14 +55,17 @@ export function followers() {
     })
         .then(response => response.json())
         .then(data => {
+            document.getElementById('loading-overlay').style.display = 'none';
             document.getElementById("response").innerText = '✅ Opération réussie : ' + data.response;
             trace_requete("Requete n°1", data.response_time, dbType, params, data.data)
         })
         .catch(err => {
+            document.getElementById('loading-overlay').style.display = 'none';
             document.getElementById('response').innerText = '❌ Erreur lors de la requête';
             console.error(err);
         });
 }
+
 
 // Fonction pour effectuer une requête POST sur /api/users/:id/followers/:depth/products
 export function followersProducts() {
@@ -67,6 +75,7 @@ export function followersProducts() {
     const productId = document.getElementById('productId').value;
     const params = { userId, depth, dbType, productId };
     console.log("param=", params)
+    document.getElementById('loading-overlay').style.display = 'block';
     fetch('/api/followers/products', {
         method: 'POST',
         headers: {
@@ -81,10 +90,12 @@ export function followersProducts() {
     })
         .then(response => response.json())
         .then(data => {
+            document.getElementById('loading-overlay').style.display = 'none';
             document.getElementById("response").innerText = '✅ Opération réussie : ' + data.response;
             trace_requete("Requete n°2", data.response_time, dbType, params, data.data)
         })
         .catch(err => {
+            document.getElementById('loading-overlay').style.display = 'none';
             document.getElementById('response').innerText = '❌ Erreur lors de la requête';
             console.error(err);
         });

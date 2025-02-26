@@ -90,6 +90,8 @@ export async function handleAction() {
         body = JSON.stringify({ nbUser: nbUser, nbProduct: nbProduct });
     }
 
+    document.getElementById('loading-overlay').style.display = 'block';
+
     // Envoi de la requête en fonction de l'action sélectionnée
     await fetch(route, {
         method: action === 'insert-user' || action === 'insert-product' || action === 'insert-massive' ? 'POST' : 'GET',
@@ -98,10 +100,12 @@ export async function handleAction() {
     })
         .then(response => response.json())
         .then(data => {
+            document.getElementById('loading-overlay').style.display = 'none';
             document.getElementById("response").innerText = '✅ Opération réussie : ' + data.response;
             time = data.response_time
         })
         .catch(error => {
+            document.getElementById('loading-overlay').style.display = 'none';
             document.getElementById("response").innerText = '❌ Erreur : ' + error.response;
         });
     trace_requete(action, time, db, body, null)
